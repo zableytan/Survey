@@ -1,0 +1,61 @@
+Title: AREA 2. QUALITY ASSURANCE
+
+Rating Guide:
+
+
+5 - Excellent : The practice is exemplary and serves as a model to others. The implementation of the criterion has led to excellent results.
+
+4 - Very Good : The criterion has been effectively implemented, and this has led to very good results.
+
+3 - Good : The criterion has been implemented adequately and has led to good results.
+
+2 - Needs Minor Improvement : The criterion has been implemented but needs minor improvement. In addition, the implementation has led to inconsistent or limited results
+
+1 - Needs Major Improvement : The criterion has been inadequately implemented and needs significant improvement. The implementation has led to insignificant or unsatisfactory results.
+
+0 - Not Implemented : The criterion has not been implemented. Furthermore, no evidence is presented to show that initiatives have been carried out to implement it.
+
+
+Sub-area: Sub-area 2.1. Internal Quality Assurance System
+
+Standard: STANDARD 6.
+Internal Quality Assurance System The institution has an established internal quality assurance system, with clearly defined policies, procedures, and activities, that implements, evaluates, enhances, and ensures the quality of its educational programs and processes.  
+
+
+Questions:
+(Rating 0-5)
+1.  A documented Internal Quality Assurance (IQA) plan is in place with clearly defined policies, procedures, and activities that enable the medical school to develop the quality of its academic and non-academic programs and processes.
+
+2.  Stakeholders are involved in the formulation, implementation, and evaluation of the IQA plan.
+
+3.  An IQA structure is established with roles, responsibilities, and accountabilities defined across all levels.
+
+4.  Adequate resources are committed to supporting the IQA programs.
+
+5.  Measurable targets and performance indicators are used to measure the performance of the medical school's IQA system.
+
+6.  Mechanisms for communicating the performance results to concerned stakeholders are in place.
+
+7.  The implementation of the IQA plan is reviewed annually for continuous improvement.
+
+
+
+
+Section 2
+
+Sub-area: Sub-area 2.2. External Quality Assurance
+
+Standard: STANDARD 7.
+The institution subjects itself to periodic external assessment designed to be fit for purpose and to validate the effectiveness of its IQA system in terms of regulatory requirements and quality standards.  
+
+Questions:
+
+1.  The medical school has an established external quality assurance assessment plan to comply with institutional and regulatory requirements.
+
+2.  The assessment is evidence-based and done by credible and independent external agencies.
+
+3.  The results of the assessment are communicated to both internal and external stakeholders.
+
+4.  The assessment results and findings are analyzed and used for improvement.
+
+5.  The plans and activities for external quality assurance assessments are regularly improved.
