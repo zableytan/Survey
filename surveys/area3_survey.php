@@ -86,7 +86,7 @@ function render_rating($name) {
         }
         .rating-guide {
             background: #f0f4fa;
-            border-left: 4px solid #4f8cff;
+            border-left: 4px solid #186098;
             padding: 12px 18px;
             margin-bottom: 28px;
             font-size: 15px;
@@ -138,19 +138,19 @@ function render_rating($name) {
             box-shadow: 0 1px 2px rgba(80,120,200,0.04);
         }
         .rating-bar input[type="radio"]:checked + label {
-            background: #4f8cff;
+            background: #186098;
             color: #fff;
-            border-color: #4f8cff;
+            border-color: #186098;
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(80,120,200,0.10);
         }
         .rating-bar label:hover, .rating-bar label:focus {
-            background: #2d6be6;
+            background: #124C7A;
             color: #fff;
             outline: none;
         }
         button {
-            background: linear-gradient(90deg, #4f8cff 60%, #2d6be6 100%);
+            background: linear-gradient(90deg, #186098 60%, #124C7A 100%);
             color: #fff;
             border: none;
             padding: 14px 0;
@@ -164,7 +164,7 @@ function render_rating($name) {
             transition: background 0.2s;
         }
         button:hover {
-            background: linear-gradient(90deg, #2d6be6 60%, #4f8cff 100%);
+            background: linear-gradient(90deg, #124C7A 60%, #186098 100%);
         }
         @media (max-width: 900px) {
             .container {
@@ -184,7 +184,7 @@ function render_rating($name) {
         }
         .standard-box {
             background: #eaf3ff;
-            border-left: 4px solid #4f8cff;
+            border-left: 4px solid #186098;
             padding: 14px 18px 10px 18px;
             margin-bottom: 18px;
             border-radius: 8px;
@@ -192,7 +192,7 @@ function render_rating($name) {
         }
         .standard-title {
             font-weight: 600;
-            color: #2d6be6;
+            color: #186098;
             font-size: 1.05rem;
             margin-bottom: 4px;
         }

@@ -6,18 +6,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Survey Department and Role Selection</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; }
-        .container { max-width: 400px; margin: 60px auto; background: #fff; padding: 30px 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        h2 { text-align: center; margin-bottom: 24px; }
-        label { display: block; margin-top: 16px; margin-bottom: 8px; font-weight: bold; }
-        select, button { width: 100%; padding: 10px; margin-bottom: 16px; border-radius: 4px; border: 1px solid #ccc; }
-        button { background: #007bff; color: #fff; border: none; font-size: 16px; cursor: pointer; }
-        button:hover { background: #0056b3; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 32px auto;
+            background: #fff;
+            padding: 24px 32px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 18px;
+            font-weight: 600;
+            color: #2d3a4a;
+        }
+        label {
+            display: block;
+            margin-top: 16px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #3b4a5a;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            border: 1px solid #c3d2f7;
+            background-color: #f8fafc;
+            color: #3b4a5a;
+            font-size: 1rem;
+        }
+        select:focus {
+            outline: none;
+            border-color: #186098;
+            box-shadow: 0 0 0 2px rgba(24, 96, 152, 0.2);
+        }
+        button {
+            background: linear-gradient(90deg, #186098 60%, #124C7A 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 32px 0 0 0;
+            box-shadow: 0 2px 8px rgba(80,120,200,0.08);
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #124C7A 60%, #186098 100%);
+        }
+        @media (max-width: 900px) {
+            .container {
+                max-width: 98vw;
+                padding: 10px 2vw;
+            }
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 6vw 2vw;
+                border-radius: 0;
+            }
+            h2 { font-size: 1.2rem; }
+            label { font-size: 0.98rem; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Select Department and Role</h2>
+        <img src="DMSF_Logo.png" alt="DMSF Logo" style="display: block; margin: 0 auto 20px auto; width: 100px;">
+        <h2>DMSFI SURVEY</h2>
         <form method="post" action="">
             <label for="department">Department:</label>
             <select name="department" id="department" required>
