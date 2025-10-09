@@ -85,26 +85,47 @@
     <div class="container">
         <img src="DMSF_Logo.png" alt="DMSF Logo" style="display: block; margin: 0 auto 20px auto; width: 100px;">
         <h2>PAASCU SELF-SURVEY INSTRUMENT</h2>
-        <form method="post" action="">
-            <label for="program">Program:</label>
-            <select name="program" id="program" required>
-                <option value="">-- Select Program --</option>
-                <option value="BS Nursing">BS Nursing</option>
-                <option value="BS Biology">BS Biology</option>
-                <option value="BS Midwifery">BS Midwifery</option>
-            </select>
-
-            <label for="role">Role:</label>
-            <select name="role" id="role" required>
-                <option value="">-- Select Role --</option>
-                <option value="Student">Student</option>
-                <option value="Full-time Faculty">Full-time Faculty</option>
-                <option value="Part-time Faculty">Part-time Faculty</option>
-                <option value="Student Support Office">Student Support Office</option>
-            </select>
-
-            <button type="submit">Proceed</button>
-        </form>
+<?php
+    // After form is submitted, show a list of surveys
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['program']) && isset($_POST['role']) && $_POST['program'] && $_POST['role']) {
+        $program = htmlspecialchars($_POST['program']);
+        $role = htmlspecialchars($_POST['role']);
+        echo '<div style="margin: 24px 0; text-align: center;">';
+        echo '<h3>Program: ' . $program . '</h3>';
+        echo '<h4>Role: ' . $role . '</h4>';
+        echo '<p>Please select a survey to answer:</p>';
+        echo '<ul style="list-style: none; padding: 0;">';
+        echo '<li style="margin-bottom: 16px;"><a href="surveys/area1_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 1. LEADERSHIP AND GOVERNANCE</a></li>';
+        echo '<li style="margin-bottom: 16px;"><a href="surveys/area2_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 2. QUALITY ASSURANCE</a></li>';
+        echo '<li style="margin-bottom: 16px;"><a href="surveys/area3_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 3. RESOURCE MANAGEMENT</a></li>';
+        echo '<li style="margin-bottom: 16px;"><a href="surveys/area4_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 4. TEACHING-LEARNING</a></li>';
+        echo '<li style="margin-bottom: 16px;"><a href="surveys/area5_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 5. STUDENT SERVICES</a></li>';
+        echo '</ul>';
+        echo '<a href="index.php" style="display:inline-block;margin-top:20px;color:#124C7A;text-decoration:underline;font-size:0.97rem;">&laquo; Go back</a>';
+        echo '</div>';
+    } else {
+?>
+    <form method="post" action="">
+        <label for="program">Program:</label>
+        <select name="program" id="program" required>
+            <option value="">-- Select Program --</option>
+            <option value="BS Nursing">BS Nursing</option>
+            <option value="BS Biology">BS Biology</option>
+            <option value="BS Midwifery">BS Midwifery</option>
+        </select>
+        <label for="role">Role:</label>
+        <select name="role" id="role" required>
+            <option value="">-- Select Role --</option>
+            <option value="Student">Student</option>
+            <option value="Full-time Faculty">Full-time Faculty</option>
+            <option value="Part-time Faculty">Part-time Faculty</option>
+            <option value="Student Support Office">Student Support Office</option>
+        </select>
+        <button type="submit">Proceed</button>
+    </form>
+<?php
+    }
+?>
     </div>
 </body>
 </html>

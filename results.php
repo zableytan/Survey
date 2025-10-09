@@ -102,6 +102,70 @@ $areas = [
             ['title' => 'Sub-area 3.2. Financial Resources', 'questions' => range(12, 17)],
             ['title' => 'Sub-area 3.3. Learning, Physical and IT Facilities', 'questions' => range(18, 27)]
         ]
+    ],
+    'area4' => [
+        'name' => 'Area 4: Teaching-Learning',
+        'table' => 'area4_responses',
+        'questions' => [
+            'The medical program is aligned with the vision, mission, and goals of the institution.',
+            'The content includes basic biomedical sciences, research, clinical sciences, skills, and behavioral and social sciences.',
+            'An established system is in place for the design, development, and review of the medical program.',
+            'Delivery plans and syllabi are developed for each course and communicated based on expected learning outcomes.',
+            'The course objectives, including the expected learning outcomes of the medical program, are established.',
+            'Students and key stakeholders participate in the design, development, and review of the medical program.',
+            'The system of managing the medical program is regularly assessed for improvement and updating.',
+            'All students are exposed to various learning opportunities in which priority health care concerns are addressed, high-quality and cost-effective health care is provided, and the practice of health care to the underserved.',
+            'Students see patients and interact with teams of health professionals to develop the necessary knowledge, skills, and attitudes for providing competent and compassionate patient care.',
+            // Sub-area 4.2
+            'There is a system to select, develop, use and evaluate appropriate teaching and learning methods and activities.',
+            'The methods and activities employed are aligned with the educational philosophy of the institution.',
+            'The teaching-learning strategies are adopted to a virtual or blended mode of instruction.',
+            'Whenever possible, interprofessional education and health teams are incorporated as teaching-learning strategies.',
+            "Stakeholders' feedback is considered in selecting, developing, and using teaching-learning methods and activities.",
+            'The methods and activities adopted to promote the achievement of the learning outcomes and promote life-long learning.',
+            'Monitoring and evaluating the methods and activities deployed for improvement using current innovations and trends in teaching-learning modalities are regularly done.',
+            'There is a functioning curriculum committee responsible for monitoring and evaluating the teaching-learning methods and activities.',
+            // Sub-area 4.3
+            'There is an established system to track students\' progress from admission, their progression from one level to the next, up to the time of graduation.',
+            'Various assessment methods are aligned with the achievement of the expected learning outcomes of the course and the medical program and are valid, reliable, and fair.',
+            'Assessment methods are adopted to a virtual or blended mode of instruction.',
+            'A system is in place to ensure the integrity of the assessment process.',
+            'Exit interviews of graduating students are regularly conducted to serve as inputs for assessment methods and course improvements.',
+            'Methods for assessment and results are regularly reviewed and evaluated for improvement.',
+            'There is an appeal process for assessment results.'
+        ],
+        'sub_areas' => [
+            ['title' => 'Sub-area 4.1. Curricular Programs', 'questions' => range(1, 9)],
+            ['title' => 'Sub-area 4.2. Teaching and Learning Methods', 'questions' => range(10, 17)],
+            ['title' => 'Sub-area 4.3. Assessment Methods', 'questions' => range(18, 24)]
+        ]
+    ],
+    'area5' => [
+        'name' => 'Area 5: Student Services',
+        'table' => 'area5_responses',
+        'questions' => [
+            // Sub-area 5.1
+            'A system with defined plans, structures, and policies is established for the recruitment and admission of students.',
+            'Criteria for student selection and placement are defined, promoting proper matching of student aptitudes and capabilities to the medical program.',
+            'Defined procedures are implemented to ensure effective implementation of recruitment, admission, and placement of students.',
+            'Measures are undertaken to monitor the effectiveness of the system for recruitment, admission, and placement.',
+            'Student recruitment, admission, and placement are improved to ensure that they remain relevant and practical.',
+            'Student recruitment and selection processes conform to the regulatory standards set for admission to the medical education program.',
+            "The institution's admission policies and student selection processes are widely publicized.",
+            // Sub-area 5.2
+            'The medical school has a well-defined, comprehensive system to support the academic needs of students.',
+            'The medical school has accessible programs for student services to support the academic and non-academic needs of students.',
+            'There is a process to identify and monitor students needing personal counseling, academic or financial support.',
+            'There is provision for adequate, accessible, and affordable health services to students.',
+            'There are adequate financial and physical resources and qualified support staff appointed to provide student services and support.',
+            'Measures are undertaken to review the effectiveness of the programs for student services and support and student monitoring systems.',
+            'Student services and support and student monitoring systems are improved to meet the needs of students according to established standards.',
+            'The available student services are gender-sensitive and culturally appropriate.'
+        ],
+        'sub_areas' => [
+            ['title' => 'Sub-Area 5.1. Student Recruitment, Admission, and Placement', 'questions' => range(1, 7)],
+            ['title' => 'Sub-area 5.2. Student Services Programs and Support', 'questions' => range(8, 15)]
+        ]
     ]
 ];
 
