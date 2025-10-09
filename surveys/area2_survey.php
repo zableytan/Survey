@@ -1,5 +1,38 @@
 <?php
-// area2_survey.php
+include_once '../config/db.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $questions = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $q_name = 'q' . $i;
+        $questions[$q_name] = isset($_POST[$q_name]) ? (int)$_POST[$q_name] : null;
+    }
+
+    $columns = implode(', ', array_keys($questions));
+    $placeholders = implode(', ', array_fill(0, count($questions), '?'));
+    $values = array_values($questions);
+
+    $sql = "INSERT INTO area2_responses ($columns, submitted_at) VALUES ($placeholders, NOW())";
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt) {
+        $types = str_repeat('i', count($values)); // All questions are tinyint, so 'i' for integer
+        $stmt->bind_param($types, ...$values);
+
+        if ($stmt->execute()) {
+            // Redirect to a thank you page or results page
+            header("Location: ../submission_success.php");
+            exit();
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        echo "Error preparing statement: " . $conn->error;
+    }
+    $conn->close();
+}
+
 function render_rating($name) {
     $labels = [
         5 => '5',
@@ -23,7 +56,7 @@ function render_rating($name) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area 2 Survey - Quality Assurance</title>
+    <title>Area 2: Quality Assurance Survey</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -175,12 +208,12 @@ function render_rating($name) {
         <h2>AREA 2. QUALITY ASSURANCE</h2>
         <div class="rating-guide">
             <strong>Rating Guide:</strong><br>
-            5 - Excellent : The practice is exemplary and serves as a model to others.<br>
-            4 - Very Good : The criterion has been effectively implemented.<br>
-            3 - Good : The criterion has been implemented adequately.<br>
-            2 - Needs Minor Improvement : Implemented but needs minor improvement.<br>
-            1 - Needs Major Improvement : Implemented inadequately, needs significant improvement.<br>
-            0 - Not Implemented : Not implemented, no evidence of initiatives.
+            5 - Excellent : The practice is exemplary and serves as a model to others. The implementation of the criterion has led to excellent results.<br>
+            4 - Very Good : The criterion has been effectively implemented, and this has led to very good results.<br>
+            3 - Good : The criterion has been implemented adequately and has led to good results.<br>
+            2 - Needs Minor Improvement : The criterion has been implemented but needs minor improvement. In addition, the implementation has led to inconsistent or limited results.<br>
+            1 - Needs Major Improvement : The criterion has been inadequately implemented and needs significant improvement. The implementation has led to insignificant or unsatisfactory results.<br>
+            0 - Not Implemented : The criterion has not been implemented. Furthermore, no evidence is presented to show that initiatives have been carried out to implement it.
         </div>
         <form method="post" action="">
             <div class="section">
@@ -218,6 +251,7 @@ function render_rating($name) {
                     <?php render_rating('q7'); ?>
                 </div>
             </div>
+
             <div class="section">
                 <h3>Sub-area 2.2. External Quality Assurance</h3>
                 <div class="standard-box">

@@ -1,0 +1,34 @@
+CREATE DATABASE IF NOT EXISTS survey_db;
+USE survey_db;
+
+CREATE TABLE IF NOT EXISTS area3_responses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    q1 TINYINT,
+    q2 TINYINT,
+    q3 TINYINT,
+    q4 TINYINT,
+    q5 TINYINT,
+    q6 TINYINT,
+    q7 TINYINT,
+    q8 TINYINT,
+    q9 TINYINT,
+    q10 TINYINT,
+    q11 TINYINT,
+    q12 TINYINT,
+    q13 TINYINT,
+    q14 TINYINT,
+    q15 TINYINT,
+    q16 TINYINT,
+    q17 TINYINT,
+    q18 TINYINT,
+    q19 TINYINT,
+    q20 TINYINT,
+    q21 TINYINT,
+    q22 TINYINT,
+    q23 TINYINT,
+    q24 TINYINT,
+    q25 TINYINT,
+    q26 TINYINT,
+    q27 TINYINT,
+    submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

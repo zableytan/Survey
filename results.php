@@ -2,6 +2,40 @@
 require_once __DIR__ . '/config/db.php';
 
 $areas = [
+    'area1' => [
+        'name' => 'Area 1: Leadership and Governance',
+        'table' => 'area1_responses',
+        'questions' => [
+            'The process of articulating the vision and mission statements was carried out involving the participation of the medical school\'s stakeholders.',
+            'The vision and mission statements are communicated periodically to its stakeholders.',
+            'All sectors of the medical school can identify with and own the vision-mission statements of the institution.',
+            'The medical school defines clear indicators of how the vision and mission are achieved.',
+            'There is a periodic revisiting of the medical school\'s vision and mission.',
+            'The medical school has a clearly articulated mission statement that addresses the priority health care needs of the community, region, and nation.',
+            'The Governing Board and the administrators are well qualified and have the experience to function in their respective roles.',
+            'Management promotes good governance, promoting integrity and accountability.',
+            'Leadership is open to suggestions and proactively anticipating and responding to changes that may affect the medical school\'s operations.',
+            'Leadership training and succession planning are provided for.',
+            'The medical school periodically undertakes a strategic planning process with the involvement of key stakeholders.',
+            'The plans, programs, and activities are aligned with the medical school\'s vision, mission, and objectives.',
+            'Relevant external and internal factor conditions are identified and used in the formulation of the plan.',
+            'Plans, programs, and activities have clear and measurable targets and are time bound.',
+            'A system for periodic follow-through and evaluation is in place for plans, programs, and activities.',
+            'Ethics, social responsibility, technology, innovation, and internationalization are considered in formulating the strategic plan.',
+            'Adequate resources are committed to the planning exercise and the implementation and evaluation of the strategic plan.',
+            'A system following the Plan-Do-Check-Act (PDCA) cycle is followed in policy formulation and implementation.',
+            'Policies and procedures promote the medical school\'s values and the unique culture of the institution.',
+            'They are customer-focused and enforced with transparency, consistency, and fairness.',
+            'They consider interrelationships among the various sectors of the medical school and promote synergy in operations.',
+            'Policies for teaching-learning, research, community engagement, and services are articulated and documented.',
+            'They comply with government regulations and standards.',
+            'A risk management program is in place to assess, communicate and implement initiatives to identify and mitigate current and potential sources of risk.',
+            'Explicit risk management policies and established protocols are defined to forestall any identified risks.',
+            'Management assumes the primary responsibility for managing risks and involves the participation of key stakeholders in initiatives involving risk determination and control.',
+            'Medical school resources are utilized effectively, safeguarded, and sufficiently ensured.',
+            'Transparent monitoring processes are established so that all risk-mitigating efforts are working and are effective.'
+        ]
+    ],
     'area2' => [
         'name' => 'Area 2: Quality Assurance',
         'table' => 'area2_responses',
@@ -19,16 +53,48 @@ $areas = [
             'The assessment results and findings are analyzed and used for improvement.',
             'The plans and activities for external quality assurance assessments are regularly improved.'
         ]
-    ]
+    ],
+    'area3' => [
+        'name' => 'Area 3: Resource Management',
+        'sub_areas' => [
+            '3.1' => ['name' => 'Human Resources', 'questions' => 11],
+            '3.2' => ['name' => 'Financial Resources', 'questions' => 6],
+            '3.3' => ['name' => 'Learning, Physical and IT Facilities', 'questions' => 10]
+        ],
+        'table' => 'area3_responses'
+    ],
     // Add more areas here as you implement them
 ];
 
-$selected_area = isset($_GET['area']) && isset($areas[$_GET['area']]) ? $_GET['area'] : 'area2';
+$selected_area = isset($_GET['area']) && isset($areas[$_GET['area']]) ? $_GET['area'] : 'area1';
 $area = $areas[$selected_area];
 
 // Define sub-areas for Area 2
 $sub_areas = [];
-if ($selected_area === 'area2') {
+if ($selected_area === 'area1') {
+    $sub_areas = [
+        [
+            'title' => 'Sub-area 1.1. Vision Mission',
+            'questions' => range(1, 6)
+        ],
+        [
+            'title' => 'Sub-area 1.2. Leadership and Management',
+            'questions' => range(7, 10)
+        ],
+        [
+            'title' => 'Sub-area 1.3. Strategic Management',
+            'questions' => range(11, 17)
+        ],
+        [
+            'title' => 'Sub-area 1.4. Policy Formulation and Implementation',
+            'questions' => range(18, 23)
+        ],
+        [
+            'title' => 'Sub-area 1.5. Risk Management',
+            'questions' => range(24, 28)
+        ]
+    ];
+} else if ($selected_area === 'area2') {
     $sub_areas = [
         [
             'title' => 'Sub-area 2.1. Internal Quality Assurance System',
@@ -111,7 +177,7 @@ if ($res && $row = $res->fetch_assoc()) {
                 <th>Question</th>
                 <th>Average Rating</th>
             </tr>
-            <?php if ($selected_area === 'area2'): ?>
+            <?php if (!empty($sub_areas)): ?>
                 <?php foreach ($sub_areas as $sub_idx => $sub): ?>
                     <tr class="subarea-header">
                         <td colspan="2" style="background:#e0eaff; color:#2d6be6; font-weight:600; font-size:1.05rem; border-top:2px solid #b3cfff;">
