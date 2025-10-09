@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Survey Department and Role Selection</title>
+    <title>Survey Program and Role Selection</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -84,11 +84,11 @@
 <body>
     <div class="container">
         <img src="DMSF_Logo.png" alt="DMSF Logo" style="display: block; margin: 0 auto 20px auto; width: 100px;">
-        <h2>DMSFI SURVEY</h2>
+        <h2>PAASCU SELF-SURVEY INSTRUMENT</h2>
         <form method="post" action="">
-            <label for="department">Department:</label>
-            <select name="department" id="department" required>
-                <option value="">-- Select Department --</option>
+            <label for="program">Program:</label>
+            <select name="program" id="program" required>
+                <option value="">-- Select Program --</option>
                 <option value="BS Nursing">BS Nursing</option>
                 <option value="BS Biology">BS Biology</option>
                 <option value="BS Midwifery">BS Midwifery</option>
