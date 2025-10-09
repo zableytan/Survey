@@ -56,56 +56,49 @@ $areas = [
     ],
     'area3' => [
         'name' => 'Area 3: Resource Management',
-        'sub_areas' => [
-            '3.1' => ['name' => 'Human Resources', 'questions' => 11],
-            '3.2' => ['name' => 'Financial Resources', 'questions' => 6],
-            '3.3' => ['name' => 'Learning, Physical and IT Facilities', 'questions' => 10]
+        'table' => 'area3_responses',
+        'questions' => [
+            'Human resource plans, policies, and programs are defined and implemented to enable the medical school to achieve its teaching, research, and community service functions.',
+            'Recruitment, selection, and hiring policies are formulated and communicated and are consistently applied.',
+            'Training and development programs are needs-based and are provided to employees.',
+            'Deployment, promotion, succession, and career pathing programs are in place.',
+            'A performance management system covering job evaluation, reward, recognition, coaching, and mentoring is in place.',
+            'Salaries, incentives, and benefits are set at levels that ensure the medical school attracts and retains qualified staff.',
+            'Provisions for resignation, termination, and retirement are in place.',
+            'There is a sufficient workforce to attend to the needs of the medical school.',
+            'The working environment is risk-free and safe for the employees.',
+            'Policies and programs are in place to promote the well-being of employees.',
+            'Human resource plans, policies, and programs are periodically assessed for improvement.',
+            'The financial management system is designed to make resources available to support the medical school\'s vision, mission, and goals, particularly in teaching, research, and community service.',
+            'There are adequate funds to guarantee the viability of medical school operations and programs, with provisions for good sourcing of finances when needed.',
+            'A participative budgeting process is in place, which includes regular budget performance reports and analysis.',
+            'Accounting internal controls function effectively to safeguard the assets, promote the integrity of the accounting records, and ensure compliance with regulatory requirements.',
+            'Internal and external audits are regularly carried out to ensure the reliability of accounting systems and reports.',
+            'Responsibilities for asset custody, use, control, and accountability are clearly defined.',
+            'There is a facilities development plan with a sufficient budget that is documented and regularly updated.',
+            'The plan reflects consideration for environmental responsibility in its programs.',
+            'There is an office responsible for the development, maintenance, and safety of the physical facilities.',
+            'Infrastructures are adequate and relevant to support teaching-learning, research, and community service.',
+            'Classrooms, lecture halls, seminar rooms, and computer rooms are adequate, kept clean, free from distractions, and conducive for learning.',
+            'Library and laboratories are adequate, accessible, up-to-date, and with a budget for developing collections.',
+            'The IT facilities and infrastructure, both hardware and software, are adequate, up-to-date, and secure.',
+            'There are sufficient provisions in the use of physical facilities to promote the health and safety of students and staff.',
+            'The medical school is compliant with contractual and government requirements as to physical and IT facilities.',
+            'Some facilities and provisions cater to people with special needs.'
         ],
-        'table' => 'area3_responses'
-    ],
-    // Add more areas here as you implement them
+        'sub_areas' => [
+            ['title' => 'Sub-area 3.1. Human Resources', 'questions' => range(1, 11)],
+            ['title' => 'Sub-area 3.2. Financial Resources', 'questions' => range(12, 17)],
+            ['title' => 'Sub-area 3.3. Learning, Physical and IT Facilities', 'questions' => range(18, 27)]
+        ]
+    ]
 ];
 
 $selected_area = isset($_GET['area']) && isset($areas[$_GET['area']]) ? $_GET['area'] : 'area1';
 $area = $areas[$selected_area];
 
-// Define sub-areas for Area 2
-$sub_areas = [];
-if ($selected_area === 'area1') {
-    $sub_areas = [
-        [
-            'title' => 'Sub-area 1.1. Vision Mission',
-            'questions' => range(1, 6)
-        ],
-        [
-            'title' => 'Sub-area 1.2. Leadership and Management',
-            'questions' => range(7, 10)
-        ],
-        [
-            'title' => 'Sub-area 1.3. Strategic Management',
-            'questions' => range(11, 17)
-        ],
-        [
-            'title' => 'Sub-area 1.4. Policy Formulation and Implementation',
-            'questions' => range(18, 23)
-        ],
-        [
-            'title' => 'Sub-area 1.5. Risk Management',
-            'questions' => range(24, 28)
-        ]
-    ];
-} else if ($selected_area === 'area2') {
-    $sub_areas = [
-        [
-            'title' => 'Sub-area 2.1. Internal Quality Assurance System',
-            'questions' => range(1, 7)
-        ],
-        [
-            'title' => 'Sub-area 2.2. External Quality Assurance',
-            'questions' => range(8, 12)
-        ]
-    ];
-}
+// Define sub-areas based on the selected area's definition
+$sub_areas = isset($area['sub_areas']) ? $area['sub_areas'] : [];
 
 // Query summary
 $summary = [];
