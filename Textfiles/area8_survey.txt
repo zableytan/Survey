@@ -16,62 +16,120 @@ Rating Guide:
 0 - Not Implemented : The criterion has not been implemented. Furthermore, no evidence is presented to show that initiatives have been carried out to implement it.
 
 
-Sub-area: Sub-area 7.1. Research Management and Collaboration 
+Sub-area: Sub-area 8.1 Educational Results  
 
-Standard: STANDARD 18. 
-The institution implements a research program aligned with its mission and vision, supports 
-its teaching-learning and community engagement functions, and addresses local and national 
-development needs.
+Standard: STANDARD 20. 
+The educational process results include the achievement of the expected learning outcomes, 
+pass rates, dropout rates, the average time to graduate, employability of graduates, pass 
+rates of graduates in board examinations of board-related program offerings, and the 
+satisfaction levels of graduates, among others.
 
 Questions:
 (Rating 0-5)
-1. There is a defined research agenda with defined goals, plans, policies, and 
-activities.
+1. The medical program's expected institutional and course learning outcomes are 
+defined, monitored, and assessed for improvement. 
 
-2. The research program complies with institutional and regulatory requirements.
+2. All courses of the medical program's pass and dropout rates are identified, 
+monitored, and assessed for improvement.
 
-3. An appropriate structure with qualified staff is established.
+3. The average time to graduate for the program is identified, monitored, and 
+assessed for improvement.
 
-4. The human resource has adequate training on technical (good clinical practice, 
-animal care, biosafety) and ethical aspects of research.
+4. A career progression program is established, monitored, and assessed for 
+improvement.
 
-5. Funds and other resources are adequate in the promotion and conduct of 
-research.
+5. The performance rate within or above the national passing rate and the failure 
+rates of graduates in the physician licensure examination (PLE) are identified, 
+monitored, and assessed for improvement.
 
-6. The conduct of research is part of the criteria for faculty promotion, awards, 
-and for which they are adequately compensated. 
-
-7. Research linkages, collaboration, and partnerships are established in pursuit of 
-research goals.
-
-8. The research program and activities are regularly assessed, using performance 
-indicators and stakeholder needs satisfaction, from which the continuous 
-improvement of the research program ensues.
-
-9. The medical school conducts research that will define and enhance cost
-effective health care and health care delivery to the underserved.  
+6. The satisfaction levels of key stakeholders on the quality of graduates are 
+established, monitored, and assessed for improvements.   
 
 
 
 
 Section 2
 
-Sub-area: Sub-area 7.2. Intellectual Property Rights and Ethics in Research
+Sub-area: Sub-area 8.2. Community Engagement and Service Results 
 
-Standard: STANDARD 19. 
-The institution has a policy on intellectual property rights and adherence to ethical norms in 
-research.
+Standard: STANDARD 21. 
+The institution's community engagement and service programs produce results that impact 
+the institution, its stakeholders, and society.
 
 Questions:
 
-1. A system is in place to protect the intellectual property rights of the faculty and 
-the institutional research outputs.
+1. The nature and volume of community engagement and service activities are 
+identified, monitored, and assessed for improvement.
 
-2. The management of the intellectual property is regularly assessed for 
+2. The societal impact and achievements of these activities are identified, 
+monitored, and assessed for improvement. 
+
+3. The impact on the medical school, faculty, staff, and students is identified, 
+monitored, and assessed for improvement.
+
+4. The impact on these activities' beneficiaries and other stakeholders is 
+identified, monitored, and assessed for improvement.
+
+
+
+Section 3
+
+Sub-area: Sub-area 8.3. Research Results
+
+Standard: STANDARD 22. 
+The institution has produced research outputs through new knowledge embodied in 
+publications, citations, journals, research-informed teaching, technology transfers, 
+innovations, inventions, creative works, etc.
+
+Questions:
+
+1. The nature and number of research outputs done by faculty members and 
+staff are documented, monitored, and assessed for improvement.
+
+2. The nature and number of researches done by research teams and students 
+are documented and assessed for improvement.
+
+3. The nature and number of research publications are documented, 
+monitored, and assessed for improvement.
+
+4. The nature and number of intellectual properties are documented, 
+monitored, and assessed for improvement.
+
+5. The impact of research outputs and their publications are identified, 
+monitored, and assessed for improvement.
+
+6. The stakeholders' satisfaction in research activities is determined to guide 
+further research development in the institution.
+
+
+
+
+Section 4
+
+Sub-area: Sub-area 8.4. Financial and Competitiveness Results 
+
+Standard: STANDARD 23. 
+The institution's financial performance and competitiveness are measured, monitored, and 
+assessed for improvement and sustainability.
+
+Questions:
+
+1. Asset acquisition and placement, retention, and disposal are monitored and 
+assessed for improvement.
+
+2. Financing in terms of debt, equity, grants, or endowments is monitored and 
+assessed for improvement. 
+
+3. Education, research, and service activities measured in income and expenditure 
+streams are monitored and assessed for improvement. 
+
+4. Cash flows are established, monitored, and assessed for improvement. 
+
+5. Reserves and savings are established, monitored, and assessed for 
 improvement. 
 
-3. Policies and guidelines on the ethical conduct of research and publication are 
-established.
+6. Indicators of a reputation for quality program offerings, research, and extension 
+activities are identified, monitored, and assessed for improvement.
 
-4. An ethics committee is constituted to ensure that policies and guidelines on 
-intellectual property rights and ethics in research are enforced.
+7. Best practices of the medical school are identified, monitored, and assessed for 
+improvement.

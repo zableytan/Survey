@@ -62,8 +62,73 @@ function render_rating($name) {
         .rating-bar label:hover, .rating-bar label:focus { background: #124C7A; color: #fff; outline: none; }
         button { background: linear-gradient(90deg, #186098 60%, #124C7A 100%); color: #fff; border: none; padding: 14px 0; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; width: 100%; margin: 32px 0 0 0; box-shadow: 0 2px 8px rgba(80,120,200,0.08); transition: background 0.2s; }
         button:hover { background: linear-gradient(90deg, #124C7A 60%, #186098 100%); }
-        @media (max-width: 900px) { .container { max-width: 98vw; padding: 10px 2vw; } }
-        @media (max-width: 600px) { .container { padding: 6vw 2vw; border-radius: 0; } h2 { font-size: 1.2rem; } h3 { font-size: 1rem; } .question-card label { font-size: 0.98rem; } .rating-bar label { padding: 8px 8px; font-size: 15px; } }
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 90%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 95%;
+                margin: 15px auto;
+                padding: 15px;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            h3 {
+                font-size: 1.1rem;
+            }
+            .rating-guide, .standard-desc, .question-card label {
+                font-size: 0.95rem;
+            }
+            .rating-bar label {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                margin: 0;
+                padding: 10px;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            h3 {
+                font-size: 1rem;
+                margin: 25px 0 15px 0;
+            }
+            .rating-guide, .standard-desc, .question-card label {
+                font-size: 0.9rem;
+            }
+            .question-card {
+                padding: 15px;
+            }
+            .rating-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            .rating-bar label {
+                padding: 5px 10px;
+                font-size: 0.85rem;
+                min-width: 28px;
+            }
+            button {
+                padding: 12px 0;
+                font-size: 1rem;
+                margin-top: 25px;
+            }
+        }
         .standard-box { background: #eaf3ff; border-left: 4px solid #186098; padding: 14px 18px 10px 18px; margin-bottom: 18px; border-radius: 8px; box-shadow: 0 1px 4px rgba(80,120,200,0.04); }
         .standard-title { font-weight: 600; color: #186098; font-size: 1.05rem; margin-bottom: 4px; }
         .standard-desc { color: #3b4a5a; font-size: 0.98rem; }

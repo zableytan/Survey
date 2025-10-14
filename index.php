@@ -83,7 +83,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="DMSF_Logo.png" alt="DMSF Logo" style="display: block; margin: 0 auto 20px auto; width: 100px;">
+        <img src="DMSF_Logo.png" alt="DMSF Logo" style="display: block; margin: 0 auto 20px auto; max-width: 100%; height: auto; width: 100px;">
         <h2>PAASCU SELF-SURVEY INSTRUMENT</h2>
 <?php
     // After form is submitted, show a list of surveys
@@ -100,6 +100,9 @@
         echo '<li style="margin-bottom: 16px;"><a href="surveys/area3_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 3. RESOURCE MANAGEMENT</a></li>';
         echo '<li style="margin-bottom: 16px;"><a href="surveys/area4_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 4. TEACHING-LEARNING</a></li>';
         echo '<li style="margin-bottom: 16px;"><a href="surveys/area5_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 5. STUDENT SERVICES</a></li>';
+        echo '<li style="margin-bottom: 16px;"><a href="surveys/area6_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 6. EXTERNAL RELATIONS</a></li>';
+        echo '<li style="margin-bottom: 16px;"><a href="surveys/area7_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 7. RESEARCH</a></li>';
+        echo '<li style="margin-bottom: 16px;"><a href="surveys/area8_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">AREA 8. RESULTS</a></li>';
         echo '</ul>';
         echo '<a href="index.php" style="display:inline-block;margin-top:20px;color:#124C7A;text-decoration:underline;font-size:0.97rem;">&laquo; Go back</a>';
         echo '</div>';

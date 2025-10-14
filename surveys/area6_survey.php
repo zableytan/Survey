@@ -3,14 +3,14 @@ include_once '../config/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $questions = [];
-    for ($i = 1; $i <= 15; $i++) {
+    for ($i = 1; $i <= 22; $i++) { // Updated to 22 questions
         $q_name = 'q' . $i;
         $questions[$q_name] = isset($_POST[$q_name]) ? (int)$_POST[$q_name] : null;
     }
     $columns = implode(', ', array_keys($questions));
     $placeholders = implode(', ', array_fill(0, count($questions), '?'));
     $values = array_values($questions);
-    $sql = "INSERT INTO area5_responses ($columns, submitted_at) VALUES ($placeholders, NOW())";
+    $sql = "INSERT INTO area6_responses ($columns, submitted_at) VALUES ($placeholders, NOW())"; // Updated table name
     $stmt = $conn->prepare($sql);
     if ($stmt) {
         $types = str_repeat('i', count($values));
@@ -44,7 +44,7 @@ function render_rating($name) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area 5: Student Services Survey</title>
+    <title>Area 6: External Relations Survey</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f6f8fa; margin: 0; padding: 0; }
         .container { max-width: 700px; margin: 32px auto; background: #fff; padding: 24px 32px; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
@@ -96,14 +96,14 @@ function render_rating($name) {
             .standard-title { font-size: 1rem; }
             .standard-desc { font-size: 0.9rem; }
         }
-        .standard-box { background: #eaf3ff; border-left: 4px solid #186098; padding: 14px 18px 10px 18px; margin-bottom: 18px; border-radius: 8px; box-shadow: 0 1px 4px rgba(80,120,200,0.04); }
+        .standard-box { background: #eaf3ff; border-left: 44px solid #186098; padding: 14px 18px 10px 18px; margin-bottom: 18px; border-radius: 8px; box-shadow: 0 1px 4px rgba(80,120,200,0.04); }
         .standard-title { font-weight: 600; color: #186098; font-size: 1.05rem; margin-bottom: 4px; }
         .standard-desc { color: #3b4a5a; font-size: 0.98rem; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2>AREA 5. STUDENT SERVICES</h2>
+    <h2>AREA 6. EXTERNAL RELATIONS</h2>
     <div class="rating-guide">
         <strong>Rating Guide:</strong><br>
         5 - Excellent : The practice is exemplary and serves as a model to others. The implementation of the criterion has led to excellent results.<br>
@@ -115,33 +115,40 @@ function render_rating($name) {
     </div>
     <form method="post" action="">
         <div class="section">
-            <h3>Sub-Area 5.1. Student Recruitment, Admission, and Placement</h3>
+            <h3>Sub-area 6.1. Networks, Linkages, and Partnerships</h3>
             <div class="standard-box">
-                <div class="standard-title">STANDARD 14.</div>
-                <div class="standard-desc">The institution has effective recruitment, admission, and placement of students with defined criteria that are valid and reliable.</div>
+                <div class="standard-title">STANDARD 16.</div>
+                <div class="standard-desc">The institution establishes networks, linkages, and partnerships with local, national, regional, and international agencies and groups to pursue its vision, mission, and goals.</div>
             </div>
-            <div class="question-card"><label>1. A system with defined plans, structures, and policies is established for the recruitment and admission of students.</label> <?php render_rating('q1'); ?></div>
-            <div class="question-card"><label>2. Criteria for student selection and placement are defined, promoting proper matching of student aptitudes and capabilities to the medical program.</label> <?php render_rating('q2'); ?></div>
-            <div class="question-card"><label>3. Defined procedures are implemented to ensure effective implementation of recruitment, admission, and placement of students.</label> <?php render_rating('q3'); ?></div>
-            <div class="question-card"><label>4. Measures are undertaken to monitor the effectiveness of the system for recruitment, admission, and placement.</label> <?php render_rating('q4'); ?></div>
-            <div class="question-card"><label>5. Student recruitment, admission, and placement are improved to ensure that they remain relevant and practical.</label> <?php render_rating('q5'); ?></div>
-            <div class="question-card"><label>6. Student recruitment and selection processes conform to the regulatory standards set for admission to the medical education program.</label> <?php render_rating('q6'); ?></div>
-            <div class="question-card"><label>7. The institution's admission policies and student selection processes are widely publicized.</label> <?php render_rating('q7'); ?></div>
+            <div class="question-card"><label>1. The school has a policy for national and international collaboration with other educational institutions.</label> <?php render_rating('q1'); ?></div>
+            <div class="question-card"><label>2. The medical school establishes membership in national, regional, or international professional or scientific organizations.</label> <?php render_rating('q2'); ?></div>
+            <div class="question-card"><label>3. Administrators and faculty members are affiliated with prestigious local, national, regional, and international professional or scientific organizations.</label> <?php render_rating('q3'); ?></div>
+            <div class="question-card"><label>4. There are consortium arrangements with leading prestigious medical schools in the region.</label> <?php render_rating('q4'); ?></div>
+            <div class="question-card"><label>5. There are networks and linkages with local or international schools or organizations.</label> <?php render_rating('q5'); ?></div>
+            <div class="question-card"><label>6. The school has linkages with agencies for funding research.</label> <?php render_rating('q6'); ?></div>
+            <div class="question-card"><label>7. The school has grants and donations for academic chairs and scholarships from foundations or agencies.</label> <?php render_rating('q7'); ?></div>
+            <div class="question-card"><label>8. The medical school has interaction with local and national health units and other health sectors.</label> <?php render_rating('q8'); ?></div>
+            <div class="question-card"><label>9. There are established foreign visiting or exchange professorship arrangements.</label> <?php render_rating('q9'); ?></div>
+            <div class="question-card"><label>10. There is a good number of exchange or visiting professors.</label> <?php render_rating('q10'); ?></div>
+            <div class="question-card"><label>11. There are established arrangements for exchange students</label> <?php render_rating('q11'); ?></div>
         </div>
         <div class="section">
-            <h3>Sub-area 5.2. Student Services Programs and Support</h3>
+            <h3>Sub-area 6.2. Community Engagement and Service</h3>
             <div class="standard-box">
-                <div class="standard-title">STANDARD 15.</div>
-                <div class="standard-desc">The institution ensures that student services and support are adequate and readily accessible to support students in their academic and non-academic pursuits and promote personal well-being.</div>
+                <div class="standard-title">STANDARD 17.</div>
+                <div class="standard-desc">The institution commits to conduct community engagements and service activities as part of its social responsibility and corporate citizenship.</div>
             </div>
-            <div class="question-card"><label>1. The medical school has a well-defined, comprehensive system to support the academic needs of students.</label> <?php render_rating('q8'); ?></div>
-            <div class="question-card"><label>2. The medical school has accessible programs for student services to support the academic and non-academic needs of students.</label> <?php render_rating('q9'); ?></div>
-            <div class="question-card"><label>3. There is a process to identify and monitor students needing personal counseling, academic or financial support.</label> <?php render_rating('q10'); ?></div>
-            <div class="question-card"><label>4. There is provision for adequate, accessible, and affordable health services to students.</label> <?php render_rating('q11'); ?></div>
-            <div class="question-card"><label>5. There are adequate financial and physical resources and qualified support staff appointed to provide student services and support.</label> <?php render_rating('q12'); ?></div>
-            <div class="question-card"><label>6. Measures are undertaken to review the effectiveness of the programs for student services and support and student monitoring systems.</label> <?php render_rating('q13'); ?></div>
-            <div class="question-card"><label>7. Student services and support and student monitoring systems are improved to meet the needs of students according to established standards.</label> <?php render_rating('q14'); ?></div>
-            <div class="question-card"><label>8. The available student services are gender-sensitive and culturally appropriate.</label> <?php render_rating('q15'); ?></div>
+            <div class="question-card"><label>1. The medical school provides time in the curriculum for health promotion and disease prevention in a community.</label> <?php render_rating('q12'); ?></div>
+            <div class="question-card"><label>2. The curriculum includes contact with patients in relevant clinical settings.</label> <?php render_rating('q13'); ?></div>
+            <div class="question-card"><label>3. The school and the community share responsibility for the promotion and maintenance of community health.</label> <?php render_rating('q14'); ?></div>
+            <div class="question-card"><label>4. The medical school promotes leadership in initiating and maintaining development projects in the community.</label> <?php render_rating('q15'); ?></div>
+            <div class="question-card"><label>5. The medical school provides activities and programs to develop social awareness, concern, and responsibility in the students and faculty.</label> <?php render_rating('q16'); ?></div>
+            <div class="question-card"><label>6. Medical students plan and implement projects designed to help the community attain self-reliance in health care.</label> <?php render_rating('q17'); ?></div>
+            <div class="question-card"><label>7. Community projects help raise awareness of social conditions and how they relate to the development of diseases.</label> <?php render_rating('q18'); ?></div>
+            <div class="question-card"><label>8. Exposure to the community outside the school develops social accountability and responsibility in the students and faculty.</label> <?php render_rating('q19'); ?></div>
+            <div class="question-card"><label>9. There is a well-planned community-based health program.</label> <?php render_rating('q20'); ?></div>
+            <div class="question-card"><label>10. The program follows the concepts and principles of primary health care.</label> <?php render_rating('q21'); ?></div>
+            <div class="question-card"><label>11. The medical school collaborates with the government, the private sector, and the community to support healthcare delivery to the underserved, such as racial and ethnic minorities, displaced persons, the rural and urban poor, and the inhabitants of Geographically Isolated and Disadvantaged Areas (GIDA).</label> <?php render_rating('q22'); ?></div>
         </div>
         <button type="submit">Submit Survey</button>
     </form>

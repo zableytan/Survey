@@ -22,7 +22,7 @@
         <h2>Thank You!</h2>
         <p>Your survey has been submitted successfully.</p>
         <div class="button-group">
-            <a href="index.php" class="home">Go to Home</a>
+            <a href="index.php" class="home">Go to Survey List</a>
         </div>
     </div>
 </body>

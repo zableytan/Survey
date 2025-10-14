@@ -167,21 +167,72 @@ function render_rating($name) {
         button:hover {
             background: linear-gradient(90deg, #124C7A 60%, #186098 100%);
         }
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
             .container {
-                max-width: 98vw;
-                padding: 10px 2vw;
+                max-width: 90%;
+                margin: 20px auto;
+                padding: 20px;
             }
         }
-        @media (max-width: 600px) {
+
+        @media (max-width: 768px) {
             .container {
-                padding: 6vw 2vw;
-                border-radius: 0;
+                max-width: 95%;
+                margin: 15px auto;
+                padding: 15px;
             }
-            h2 { font-size: 1.2rem; }
-            h3 { font-size: 1rem; }
-            .question-card label { font-size: 0.98rem; }
-            .rating-bar label { padding: 8px 8px; font-size: 15px; }
+            h2 {
+                font-size: 1.8rem;
+            }
+            h3 {
+                font-size: 1.1rem;
+            }
+            .rating-guide, .standard-desc, .question-card label {
+                font-size: 0.95rem;
+            }
+            .rating-bar label {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                margin: 0;
+                padding: 10px;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            h3 {
+                font-size: 1rem;
+                margin: 25px 0 15px 0;
+            }
+            .rating-guide, .standard-desc, .question-card label {
+                font-size: 0.9rem;
+            }
+            .question-card {
+                padding: 15px;
+            }
+            .rating-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            .rating-bar label {
+                padding: 5px 10px;
+                font-size: 0.85rem;
+                min-width: 28px;
+            }
+            button {
+                padding: 12px 0;
+                font-size: 1rem;
+                margin-top: 25px;
+            }
         }
         .standard-box {
             background: #eaf3ff;

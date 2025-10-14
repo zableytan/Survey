@@ -3,14 +3,14 @@ include_once '../config/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $questions = [];
-    for ($i = 1; $i <= 15; $i++) {
+    for ($i = 1; $i <= 23; $i++) { // Updated to 23 questions
         $q_name = 'q' . $i;
         $questions[$q_name] = isset($_POST[$q_name]) ? (int)$_POST[$q_name] : null;
     }
     $columns = implode(', ', array_keys($questions));
     $placeholders = implode(', ', array_fill(0, count($questions), '?'));
     $values = array_values($questions);
-    $sql = "INSERT INTO area5_responses ($columns, submitted_at) VALUES ($placeholders, NOW())";
+    $sql = "INSERT INTO area8_responses ($columns, submitted_at) VALUES ($placeholders, NOW())"; // Updated table name
     $stmt = $conn->prepare($sql);
     if ($stmt) {
         $types = str_repeat('i', count($values));
@@ -44,7 +44,7 @@ function render_rating($name) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area 5: Student Services Survey</title>
+    <title>Area 8: Results Survey</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f6f8fa; margin: 0; padding: 0; }
         .container { max-width: 700px; margin: 32px auto; background: #fff; padding: 24px 32px; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
@@ -103,7 +103,7 @@ function render_rating($name) {
 </head>
 <body>
 <div class="container">
-    <h2>AREA 5. STUDENT SERVICES</h2>
+    <h2>AREA 8. RESULTS</h2>
     <div class="rating-guide">
         <strong>Rating Guide:</strong><br>
         5 - Excellent : The practice is exemplary and serves as a model to others. The implementation of the criterion has led to excellent results.<br>
@@ -115,33 +115,55 @@ function render_rating($name) {
     </div>
     <form method="post" action="">
         <div class="section">
-            <h3>Sub-Area 5.1. Student Recruitment, Admission, and Placement</h3>
+            <h3>Sub-area 8.1 Educational Results</h3>
             <div class="standard-box">
-                <div class="standard-title">STANDARD 14.</div>
-                <div class="standard-desc">The institution has effective recruitment, admission, and placement of students with defined criteria that are valid and reliable.</div>
+                <div class="standard-title">STANDARD 20.</div>
+                <div class="standard-desc">The educational process results include the achievement of the expected learning outcomes, pass rates, dropout rates, the average time to graduate, employability of graduates, pass rates of graduates in board examinations of board-related program offerings, and the satisfaction levels of graduates, among others.</div>
             </div>
-            <div class="question-card"><label>1. A system with defined plans, structures, and policies is established for the recruitment and admission of students.</label> <?php render_rating('q1'); ?></div>
-            <div class="question-card"><label>2. Criteria for student selection and placement are defined, promoting proper matching of student aptitudes and capabilities to the medical program.</label> <?php render_rating('q2'); ?></div>
-            <div class="question-card"><label>3. Defined procedures are implemented to ensure effective implementation of recruitment, admission, and placement of students.</label> <?php render_rating('q3'); ?></div>
-            <div class="question-card"><label>4. Measures are undertaken to monitor the effectiveness of the system for recruitment, admission, and placement.</label> <?php render_rating('q4'); ?></div>
-            <div class="question-card"><label>5. Student recruitment, admission, and placement are improved to ensure that they remain relevant and practical.</label> <?php render_rating('q5'); ?></div>
-            <div class="question-card"><label>6. Student recruitment and selection processes conform to the regulatory standards set for admission to the medical education program.</label> <?php render_rating('q6'); ?></div>
-            <div class="question-card"><label>7. The institution's admission policies and student selection processes are widely publicized.</label> <?php render_rating('q7'); ?></div>
+            <div class="question-card"><label>1. The medical program's expected institutional and course learning outcomes are defined, monitored, and assessed for improvement.</label> <?php render_rating('q1'); ?></div>
+            <div class="question-card"><label>2. All courses of the medical program's pass and dropout rates are identified, monitored, and assessed for improvement.</label> <?php render_rating('q2'); ?></div>
+            <div class="question-card"><label>3. The average time to graduate for the program is identified, monitored, and assessed for improvement.</label> <?php render_rating('q3'); ?></div>
+            <div class="question-card"><label>4. A career progression program is established, monitored, and assessed for improvement.</label> <?php render_rating('q4'); ?></div>
+            <div class="question-card"><label>5. The performance rate within or above the national passing rate and the failure rates of graduates in the physician licensure examination (PLE) are identified, monitored, and assessed for improvement.</label> <?php render_rating('q5'); ?></div>
+            <div class="question-card"><label>6. The satisfaction levels of key stakeholders on the quality of graduates are established, monitored, and assessed for improvements.</label> <?php render_rating('q6'); ?></div>
         </div>
         <div class="section">
-            <h3>Sub-area 5.2. Student Services Programs and Support</h3>
+            <h3>Sub-area 8.2. Community Engagement and Service Results</h3>
             <div class="standard-box">
-                <div class="standard-title">STANDARD 15.</div>
-                <div class="standard-desc">The institution ensures that student services and support are adequate and readily accessible to support students in their academic and non-academic pursuits and promote personal well-being.</div>
+                <div class="standard-title">STANDARD 21.</div>
+                <div class="standard-desc">The institution's community engagement and service programs produce results that impact the institution, its stakeholders, and society.</div>
             </div>
-            <div class="question-card"><label>1. The medical school has a well-defined, comprehensive system to support the academic needs of students.</label> <?php render_rating('q8'); ?></div>
-            <div class="question-card"><label>2. The medical school has accessible programs for student services to support the academic and non-academic needs of students.</label> <?php render_rating('q9'); ?></div>
-            <div class="question-card"><label>3. There is a process to identify and monitor students needing personal counseling, academic or financial support.</label> <?php render_rating('q10'); ?></div>
-            <div class="question-card"><label>4. There is provision for adequate, accessible, and affordable health services to students.</label> <?php render_rating('q11'); ?></div>
-            <div class="question-card"><label>5. There are adequate financial and physical resources and qualified support staff appointed to provide student services and support.</label> <?php render_rating('q12'); ?></div>
-            <div class="question-card"><label>6. Measures are undertaken to review the effectiveness of the programs for student services and support and student monitoring systems.</label> <?php render_rating('q13'); ?></div>
-            <div class="question-card"><label>7. Student services and support and student monitoring systems are improved to meet the needs of students according to established standards.</label> <?php render_rating('q14'); ?></div>
-            <div class="question-card"><label>8. The available student services are gender-sensitive and culturally appropriate.</label> <?php render_rating('q15'); ?></div>
+            <div class="question-card"><label>1. The nature and volume of community engagement and service activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q7'); ?></div>
+            <div class="question-card"><label>2. The societal impact and achievements of these activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q8'); ?></div>
+            <div class="question-card"><label>3. The impact on the medical school, faculty, staff, and students is identified, monitored, and assessed for improvement.</label> <?php render_rating('q9'); ?></div>
+            <div class="question-card"><label>4. The impact on these activities' beneficiaries and other stakeholders is identified, monitored, and assessed for improvement.</label> <?php render_rating('q10'); ?></div>
+        </div>
+        <div class="section">
+            <h3>Sub-area 8.3. Research Results</h3>
+            <div class="standard-box">
+                <div class="standard-title">STANDARD 22.</div>
+                <div class="standard-desc">The institution has produced research outputs through new knowledge embodied in publications, citations, journals, research-informed teaching, technology transfers, innovations, inventions, creative works, etc.</div>
+            </div>
+            <div class="question-card"><label>1. The nature and number of research outputs done by faculty members and staff are documented, monitored, and assessed for improvement.</label> <?php render_rating('q11'); ?></div>
+            <div class="question-card"><label>2. The nature and number of researches done by research teams and students are documented and assessed for improvement.</label> <?php render_rating('q12'); ?></div>
+            <div class="question-card"><label>3. The nature and number of research publications are documented, monitored, and assessed for improvement.</label> <?php render_rating('q13'); ?></div>
+            <div class="question-card"><label>4. The nature and number of intellectual properties are documented, monitored, and assessed for improvement.</label> <?php render_rating('q14'); ?></div>
+            <div class="question-card"><label>5. The impact of research outputs and their publications are identified, monitored, and assessed for improvement.</label> <?php render_rating('q15'); ?></div>
+            <div class="question-card"><label>6. The stakeholders' satisfaction in research activities is determined to guide further research development in the institution.</label> <?php render_rating('q16'); ?></div>
+        </div>
+        <div class="section">
+            <h3>Sub-area 8.4. Financial and Competitiveness Results</h3>
+            <div class="standard-box">
+                <div class="standard-title">STANDARD 23.</div>
+                <div class="standard-desc">The institution's financial performance and competitiveness are measured, monitored, and assessed for improvement and sustainability.</div>
+            </div>
+            <div class="question-card"><label>1. Asset acquisition and placement, retention, and disposal are monitored and assessed for improvement.</label> <?php render_rating('q17'); ?></div>
+            <div class="question-card"><label>2. Financing in terms of debt, equity, grants, or endowments is monitored and assessed for improvement.</label> <?php render_rating('q18'); ?></div>
+            <div class="question-card"><label>3. Education, research, and service activities measured in income and expenditure streams are monitored and assessed for improvement.</label> <?php render_rating('q19'); ?></div>
+            <div class="question-card"><label>4. Cash flows are established, monitored, and assessed for improvement.</label> <?php render_rating('q20'); ?></div>
+            <div class="question-card"><label>5. Reserves and savings are established, monitored, and assessed for improvement.</label> <?php render_rating('q21'); ?></div>
+            <div class="question-card"><label>6. Indicators of a reputation for quality program offerings, research, and extension activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q22'); ?></div>
+            <div class="question-card"><label>7. Best practices of the medical school are identified, monitored, and assessed for improvement.</label> <?php render_rating('q23'); ?></div>
         </div>
         <button type="submit">Submit Survey</button>
     </form>

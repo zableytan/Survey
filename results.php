@@ -141,32 +141,122 @@ $areas = [
         ]
     ],
     'area5' => [
-        'name' => 'Area 5: Student Services',
-        'table' => 'area5_responses',
-        'questions' => [
-            // Sub-area 5.1
-            'A system with defined plans, structures, and policies is established for the recruitment and admission of students.',
-            'Criteria for student selection and placement are defined, promoting proper matching of student aptitudes and capabilities to the medical program.',
-            'Defined procedures are implemented to ensure effective implementation of recruitment, admission, and placement of students.',
-            'Measures are undertaken to monitor the effectiveness of the system for recruitment, admission, and placement.',
-            'Student recruitment, admission, and placement are improved to ensure that they remain relevant and practical.',
-            'Student recruitment and selection processes conform to the regulatory standards set for admission to the medical education program.',
-            "The institution's admission policies and student selection processes are widely publicized.",
-            // Sub-area 5.2
-            'The medical school has a well-defined, comprehensive system to support the academic needs of students.',
-            'The medical school has accessible programs for student services to support the academic and non-academic needs of students.',
-            'There is a process to identify and monitor students needing personal counseling, academic or financial support.',
-            'There is provision for adequate, accessible, and affordable health services to students.',
-            'There are adequate financial and physical resources and qualified support staff appointed to provide student services and support.',
-            'Measures are undertaken to review the effectiveness of the programs for student services and support and student monitoring systems.',
-            'Student services and support and student monitoring systems are improved to meet the needs of students according to established standards.',
-            'The available student services are gender-sensitive and culturally appropriate.'
+            'name' => 'Area 5: Student Services',
+            'table' => 'area5_responses',
+            'questions' => [
+                // Sub-area 5.1
+                'A system with defined plans, structures, and policies is established for the recruitment and admission of students.',
+                'Criteria for student selection and placement are defined, promoting proper matching of student aptitudes and capabilities to the medical program.',
+                'Defined procedures are implemented to ensure effective implementation of recruitment, admission, and placement of students.',
+                'Measures are undertaken to monitor the effectiveness of the system for recruitment, admission, and placement.',
+                'Student recruitment, admission, and placement are improved to ensure that they remain relevant and practical.',
+                'Student recruitment and selection processes conform to the regulatory standards set for admission to the medical education program.',
+                "The institution's admission policies and student selection processes are widely publicized.",
+                // Sub-area 5.2
+                'The medical school has a well-defined, comprehensive system to support the academic needs of students.',
+                'The medical school has accessible programs for student services to support the academic and non-academic needs of students.',
+                'There is a process to identify and monitor students needing personal counseling, academic or financial support.',
+                'There is provision for adequate, accessible, and affordable health services to students.',
+                'There are adequate financial and physical resources and qualified support staff appointed to provide student services and support.',
+                'Measures are undertaken to review the effectiveness of the programs for student services and support and student monitoring systems.',
+                'Student services and support and student monitoring systems are improved to meet the needs of students according to established standards.',
+                'The available student services are gender-sensitive and culturally appropriate.'
+            ],
+            'sub_areas' => [
+                ['title' => 'Sub-Area 5.1. Student Recruitment, Admission, and Placement', 'questions' => range(1, 7)],
+                ['title' => 'Sub-area 5.2. Student Services Programs and Support', 'questions' => range(8, 15)]
+            ]
         ],
-        'sub_areas' => [
-            ['title' => 'Sub-Area 5.1. Student Recruitment, Admission, and Placement', 'questions' => range(1, 7)],
-            ['title' => 'Sub-area 5.2. Student Services Programs and Support', 'questions' => range(8, 15)]
+        'area6' => [
+            'name' => 'Area 6. External Relations',
+            'table' => 'area6_responses',
+            'questions' => [
+                'The school has a policy for national and international collaboration with other educational institutions.',
+                'The medical school establishes membership in national, regional, or international professional or scientific organizations.',
+                'Administrators and faculty members are affiliated with prestigious local, national, regional, and international professional or scientific organizations.',
+                'There are consortium arrangements with leading prestigious medical schools in the region.',
+                'There are networks and linkages with local or international schools or organizations.',
+                'The school has linkages with agencies for funding research.',
+                'The school has grants and donations for academic chairs and scholarships from foundations or agencies.',
+                'The medical school has interaction with local and national health units and other health sectors.',
+                'There are established foreign visiting or exchange professorship arrangements.',
+                'There is a good number of exchange or visiting professors.',
+                'There are established arrangements for exchange students',
+                'The medical school provides time in the curriculum for health promotion and disease prevention in a community.',
+                'The curriculum includes contact with patients in relevant clinical settings.',
+                'The school and the community share responsibility for the promotion and maintenance of community health.',
+                'The medical school promotes leadership in initiating and maintaining development projects in the community.',
+                'The medical school provides activities and programs to develop social awareness, concern, and responsibility in the students and faculty.',
+                'Medical students plan and implement projects designed to help the community attain self-reliance in health care.',
+                'Community projects help raise awareness of social conditions and how they relate to the development of diseases.',
+                'Exposure to the community outside the school develops social accountability and responsibility in the students and faculty.',
+                'There is a well-planned community-based health program.',
+                'The program follows the concepts and principles of primary health care.',
+                'The medical school collaborates with the government, the private sector, and the community to support healthcare delivery to the underserved, such as racial and ethnic minorities, displaced persons, the rural and urban poor, and the inhabitants of Geographically Isolated and Disadvantaged Areas (GIDA).'
+            ],
+            'sub_areas' => [
+                ['title' => 'Sub-area 6.1. Networks, Linkages, and Partnerships', 'questions' => range(1, 11)],
+                ['title' => 'Sub-area 6.2. Community Engagement and Service', 'questions' => range(12, 22)]
+            ]
+        ],
+        'area7' => [
+            'name' => 'Area 7: Research',
+            'table' => 'area7_responses',
+            'questions' => [
+                'There is a defined research agenda with defined goals, plans, policies, and activities.',
+                'The research program complies with institutional and regulatory requirements.',
+                'An appropriate structure with qualified staff is established.',
+                'The human resource has adequate training on technical (good clinical practice, animal care, biosafety) and ethical aspects of research.',
+                'Funds and other resources are adequate in the promotion and conduct of research.',
+                'The conduct of research is part of the criteria for faculty promotion, awards, and for which they are adequately compensated.',
+                'Research linkages, collaboration, and partnerships are established in pursuit of research goals.',
+                'The research program and activities are regularly assessed, using performance indicators and stakeholder needs satisfaction, from which the continuous improvement of the research program ensues.',
+                'The medical school conducts research that will define and enhance cost effective health care and health care delivery to the underserved.',
+                'A system is in place to protect the intellectual property rights of the faculty and the institutional research outputs.',
+                'The management of the intellectual property is regularly assessed for improvement.',
+                'Policies and guidelines on the ethical conduct of research and publication are established.',
+                'An ethics committee is constituted to ensure that policies and guidelines on intellectual property rights and ethics in research are enforced.'
+            ],
+            'sub_areas' => [
+                ['title' => 'Sub-area 7.1. Research Management and Collaboration', 'questions' => range(1, 9)],
+                ['title' => 'Sub-area 7.2. Intellectual Property Rights and Ethics in Research', 'questions' => range(10, 13)],
+            ]
+        ],
+        'area8' => [
+            'name' => 'Area 8: Results',
+            'table' => 'area8_responses',
+            'questions' => [
+                'The medical program\'s expected institutional and course learning outcomes are defined, monitored, and assessed for improvement.',
+                'All courses of the medical program\'s pass and dropout rates are identified, monitored, and assessed for improvement.',
+                'The average time to graduate for the program is identified, monitored, and assessed for improvement.',
+                'A career progression program is established, monitored, and assessed for improvement.',
+                'The performance rate within or above the national passing rate and the failure rates of graduates in the physician licensure examination (PLE) are identified, monitored, and assessed for improvement.',
+                'The satisfaction levels of key stakeholders on the quality of graduates are established, monitored, and assessed for improvements.',
+                'The nature and volume of community engagement and service activities are identified, monitored, and assessed for improvement.',
+                'The societal impact and achievements of these activities are identified, monitored, and assessed for improvement.',
+                'The impact on the medical school, faculty, staff, and students is identified, monitored, and assessed for improvement.',
+                'The impact on these activities\' beneficiaries and other stakeholders is identified, monitored, and assessed for improvement.',
+                'The nature and number of research outputs done by faculty members and staff are documented, monitored, and assessed for improvement.',
+                'The nature and number of researches done by research teams and students are documented and assessed for improvement.',
+                'The nature and number of research publications are documented, monitored, and assessed for improvement.',
+                'The nature and number of intellectual properties are documented, monitored, and assessed for improvement.',
+                'The impact of research outputs and their publications are identified, monitored, and assessed for improvement.',
+                'The stakeholders\' satisfaction in research activities is determined to guide further research development in the institution.',
+                'Asset acquisition and placement, retention, and disposal are monitored and assessed for improvement.',
+                'Financing in terms of debt, equity, grants, or endowments is monitored and assessed for improvement.',
+                'Education, research, and service activities measured in income and expenditure streams are monitored and assessed for improvement.',
+                'Cash flows are established, monitored, and assessed for improvement.',
+                'Reserves and savings are established, monitored, and assessed for improvement.',
+                'Indicators of a reputation for quality program offerings, research, and extension activities are identified, monitored, and assessed for improvement.',
+                'Best practices of the medical school are identified, monitored, and assessed for improvement.'
+            ],
+            'sub_areas' => [
+                ['title' => 'Sub-area 8.1 Educational Results', 'questions' => range(1, 6)],
+                ['title' => 'Sub-area 8.2. Community Engagement and Service Results', 'questions' => range(7, 10)],
+                ['title' => 'Sub-area 8.3. Research Results', 'questions' => range(11, 16)],
+                ['title' => 'Sub-area 8.4. Financial and Competitiveness Results', 'questions' => range(17, 23)],
+            ]
         ]
-    ]
 ];
 
 $selected_area = isset($_GET['area']) && isset($areas[$_GET['area']]) ? $_GET['area'] : 'area1';
@@ -191,6 +281,15 @@ if ($res && $row = $res->fetch_assoc()) {
             'avg' => is_null($row["avg_q$i"]) ? null : round($row["avg_q$i"], 2)
         ];
     }
+    $total_avg_rating = 0;
+    $count_avg_ratings = 0;
+    foreach ($summary as $item) {
+        if (isset($item['avg']) && $item['avg'] !== null) {
+            $total_avg_rating += $item['avg'];
+            $count_avg_ratings++;
+        }
+    }
+    $overall_avg_rating = $count_avg_ratings > 0 ? round($total_avg_rating / $count_avg_ratings, 2) : '-';
 }
 ?>
 <!DOCTYPE html>
@@ -218,9 +317,40 @@ if ($res && $row = $res->fetch_assoc()) {
             font-size: 1.05rem;
             border-top: 2px solid #b3cfff;
         }
-        @media (max-width: 700px) {
-            .container { padding: 10px 2vw; border-radius: 0; }
-            th, td { font-size: 0.98rem; padding: 8px 4px; }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 95%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+            h2 { font-size: 1.8rem; }
+            select { font-size: 0.95rem; padding: 6px 12px; }
+            th, td { font-size: 0.9rem; padding: 10px 8px; }
+            .subarea-header td { font-size: 1rem; }
+            .summary { font-size: 1rem; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                margin: 0 auto;
+                padding: 15px;
+                border-radius: 0;
+            }
+            h2 { font-size: 1.5rem; }
+            select { width: 100%; margin-top: 10px; }
+            th, td { font-size: 0.85rem; padding: 8px 6px; }
+            .subarea-header td { font-size: 0.95rem; }
+            .summary { font-size: 0.95rem; }
+        }
+
+        @media (max-width: 480px) {
+            h2 { font-size: 1.3rem; }
+            th, td { font-size: 0.8rem; padding: 6px 4px; }
+            .subarea-header td { font-size: 0.9rem; }
+            .summary { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -238,7 +368,8 @@ if ($res && $row = $res->fetch_assoc()) {
             </form>
         </div>
         <div class="summary">
-            Total Responses: <strong><?= $total_responses ?></strong>
+            Total Responses: <strong><?= $total_responses ?></strong><br>
+            Overall Average Rating: <strong><?= $overall_avg_rating ?></strong>
         </div>
         <table>
             <tr>
@@ -247,6 +378,10 @@ if ($res && $row = $res->fetch_assoc()) {
             </tr>
             <?php if (!empty($sub_areas)): ?>
                 <?php foreach ($sub_areas as $sub_idx => $sub): ?>
+                        <?php
+                            $sub_area_total_rating = 0;
+                            $sub_area_question_count = 0;
+                        ?>
                     <tr class="subarea-header">
                         <td colspan="2" style="background:#e0eaff; color:#2d6be6; font-weight:600; font-size:1.05rem; border-top:2px solid #b3cfff;">
                             <?= htmlspecialchars($sub['title']) ?>
@@ -260,9 +395,30 @@ if ($res && $row = $res->fetch_assoc()) {
                                     echo ($j + 1) . '. ' . htmlspecialchars($area['questions'][$i-1]);
                                 ?>
                             </td>
-                            <td><?= isset($summary[$i]['avg']) && $summary[$i]['avg'] !== null ? $summary[$i]['avg'] : '-' ?></td>
+                            <td>
+                                <?php
+                                    $avg_rating = isset($summary[$i]['avg']) && $summary[$i]['avg'] !== null ? $summary[$i]['avg'] : '-';
+                                    if ($avg_rating !== '-') {
+                                        $sub_area_total_rating += $avg_rating;
+                                        $sub_area_question_count++;
+                                    }
+                                    echo $avg_rating;
+                                ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
+                    <tr class="subarea-summary">
+                        <td style="text-align: right; font-weight: bold;">Sub-area Average:</td>
+                        <td>
+                            <?php
+                                if ($sub_area_question_count > 0) {
+                                    echo round($sub_area_total_rating / $sub_area_question_count, 2);
+                                } else {
+                                    echo '-';
+                                }
+                            ?>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
             <?php else: ?>
                 <?php foreach ($area['questions'] as $i => $q): ?>
