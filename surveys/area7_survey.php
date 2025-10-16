@@ -1,22 +1,50 @@
 <?php
+session_start();
 include_once '../config/db.php';
 
+$program = isset($_GET['program']) ? htmlspecialchars($_GET['program']) : 'Unknown';
+$role = isset($_GET['role']) ? htmlspecialchars($_GET['role']) : 'Unknown';
+
+// Redirect if program or role are not set, or if survey already submitted
+if ($program === 'Unknown' || $role === 'Unknown') {
+    header("Location: ../selection.php");
+    exit();
+}
+
+$session_flag_name = 'survey_submitted_area7_' . md5($program . $role);
+if (isset($_SESSION[$session_flag_name]) && $_SESSION[$session_flag_name] === true) {
+    header("Location: ../submission_success.php?program=" . urlencode($program) . "&role=" . urlencode($role));
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Set session flag upon successful submission
+    $_SESSION[$session_flag_name] = true;
+
     $questions = [];
-    for ($i = 1; $i <= 13; $i++) { // Updated to 13 questions
+    for ($i = 1; $i <= 13; $i++) {
         $q_name = 'q' . $i;
         $questions[$q_name] = isset($_POST[$q_name]) ? (int)$_POST[$q_name] : null;
     }
+
     $columns = implode(', ', array_keys($questions));
     $placeholders = implode(', ', array_fill(0, count($questions), '?'));
     $values = array_values($questions);
-    $sql = "INSERT INTO area7_responses ($columns, submitted_at) VALUES ($placeholders, NOW())"; // Updated table name
+
+    // Add program and role to columns, placeholders, and values
+    $columns .= ', program, role';
+    $placeholders .= ', ?, ?';
+    $values[] = $program;
+    $values[] = $role;
+
+    $sql = "INSERT INTO area7_responses ($columns, submitted_at) VALUES ($placeholders, NOW())";
     $stmt = $conn->prepare($sql);
+
     if ($stmt) {
-        $types = str_repeat('i', count($values));
+        $types = str_repeat('i', count($questions)) . 'ss'; // 'i' for integer questions, 's' for program and role (strings)
         $stmt->bind_param($types, ...$values);
         if ($stmt->execute()) {
-            header("Location: ../submission_success.php");
+            header("Location: ../submission_success.php?program=" . urlencode($program) . "&role=" . urlencode($role));
             exit();
         } else {
             echo "Error: " . $stmt->error;

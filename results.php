@@ -269,11 +269,24 @@ $sub_areas = isset($area['sub_areas']) ? $area['sub_areas'] : [];
 $summary = [];
 $total_responses = 0;
 $sql = "SELECT COUNT(*) as cnt";
-for ($i = 1; $i <= count($area['questions']); $i++) {
-    $sql .= ", AVG(q$i) as avg_q$i";
-}
-$sql .= " FROM {$area['table']}";
-$res = $conn->query($sql);
+    for ($i = 1; $i <= count($area['questions']); $i++) {
+        $sql .= ", AVG(q$i) as avg_q$i";
+    }
+    $sql .= " FROM {$area['table']}";
+
+    $where_clauses = [];
+    if (isset($_GET['program']) && $_GET['program'] !== '') {
+        $where_clauses[] = "program = '" . $conn->real_escape_string($_GET['program']) . "'";
+    }
+    if (isset($_GET['role']) && $_GET['role'] !== '') {
+        $where_clauses[] = "role = '" . $conn->real_escape_string($_GET['role']) . "'";
+    }
+
+    if (!empty($where_clauses)) {
+        $sql .= " WHERE " . implode(" AND ", $where_clauses);
+    }
+
+    $res = $conn->query($sql);
 if ($res && $row = $res->fetch_assoc()) {
     $total_responses = $row['cnt'];
     for ($i = 1; $i <= count($area['questions']); $i++) {
@@ -302,7 +315,55 @@ if ($res && $row = $res->fetch_assoc()) {
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f6f8fa; margin: 0; }
         .container { max-width: 900px; margin: 40px auto; background: #fff; padding: 32px 24px; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
         h2 { text-align: center; color: #2d3a4a; margin-bottom: 18px; }
-        .area-select { text-align: center; margin-bottom: 30px; }
+        .area-select {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px 20px; /* Increased horizontal gap */
+            align-items: center;
+        }
+        .area-select > div {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between label and select */
+        }
+        .area-select label {
+            white-space: nowrap;
+            font-weight: 500;
+            color: #3b4a5a;
+        }
+        .area-select select {
+            flex-grow: 1;
+            min-width: 180px;
+            max-width: 250px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1.5px solid #c3d2f7;
+            font-size: 1rem;
+            background-color: #f8fafc;
+            color: #3b4a5a;
+        }
+        .area-select select:focus {
+            outline: none;
+            border-color: #186098;
+            box-shadow: 0 0 0 2px rgba(24, 96, 152, 0.2);
+        }
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .area-select {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .area-select > div {
+                width: 100%;
+                justify-content: center;
+            }
+            .area-select select {
+                max-width: 100%;
+            }
+        }
         select { padding: 8px 16px; border-radius: 6px; border: 1.5px solid #c3d2f7; font-size: 1rem; }
         table { width: 100%; border-collapse: collapse; margin-top: 18px; background: #f8fafc; }
         th, td { padding: 12px 10px; text-align: left; }
@@ -359,12 +420,40 @@ if ($res && $row = $res->fetch_assoc()) {
         <h2>Survey Results</h2>
         <div class="area-select">
             <form method="get" action="">
-                <label for="area">Select Survey Area: </label>
-                <select name="area" id="area" onchange="this.form.submit()">
-                    <?php foreach ($areas as $key => $a): ?>
-                        <option value="<?= htmlspecialchars($key) ?>" <?= $key === $selected_area ? 'selected' : '' ?>><?= htmlspecialchars($a['name']) ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <div>
+                    <label for="area">Select Survey Area: </label>
+                    <select name="area" id="area" onchange="this.form.submit()">
+                        <?php foreach ($areas as $key => $a): ?>
+                            <option value="<?= htmlspecialchars($key) ?>" <?= $key === $selected_area ? 'selected' : '' ?>><?= htmlspecialchars($a['name']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label for="program">Filter by Program: </label>
+                    <select name="program" id="program" onchange="this.form.submit()">
+                        <option value="">All Programs</option>
+                        <?php
+                            $program_query = $conn->query("SELECT DISTINCT program FROM {$area['table']}");
+                            while ($p_row = $program_query->fetch_assoc()) {
+                                $selected = (isset($_GET['program']) && $_GET['program'] == $p_row['program']) ? 'selected' : '';
+                                echo '<option value="' . htmlspecialchars($p_row['program']) . '" ' . $selected . '>' . htmlspecialchars($p_row['program']) . '</option>';
+                            }
+                        ?>
+                    </select>
+                </div>
+                <div>
+                    <label for="role">Filter by Role: </label>
+                    <select name="role" id="role" onchange="this.form.submit()">
+                        <option value="">All Roles</option>
+                        <?php
+                            $role_query = $conn->query("SELECT DISTINCT role FROM {$area['table']}");
+                            while ($r_row = $role_query->fetch_assoc()) {
+                                $selected = (isset($_GET['role']) && $_GET['role'] == $r_row['role']) ? 'selected' : '';
+                                echo '<option value="' . htmlspecialchars($r_row['role']) . '" ' . $selected . '>' . htmlspecialchars($r_row['role']) . '</option>';
+                            }
+                        ?>
+                    </select>
+                </div>
             </form>
         </div>
         <div class="summary">

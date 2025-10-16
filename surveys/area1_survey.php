@@ -1,5 +1,22 @@
 <?php
+session_start();
 include_once '../config/db.php';
+
+$program = isset($_GET['program']) ? htmlspecialchars($_GET['program']) : '';
+$role = isset($_GET['role']) ? htmlspecialchars($_GET['role']) : '';
+
+// Redirect if program or role are not set
+if (empty($program) || empty($role)) {
+    header("Location: ../selection.php");
+    exit();
+}
+
+// Check if this survey has already been submitted in the current session
+$session_key = 'survey_submitted_area1_' . md5($program . $role);
+if (isset($_SESSION[$session_key]) && $_SESSION[$session_key] === true) {
+    header("Location: ../submission_success.php?program=" . urlencode($program) . "&role=" . urlencode($role));
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $questions = [];
@@ -12,16 +29,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $placeholders = implode(', ', array_fill(0, count($questions), '?'));
     $values = array_values($questions);
 
+    // Add program and role to columns, placeholders, and values
+    $columns .= ', program, role';
+    $placeholders .= ', ?, ?';
+    $values[] = $program;
+    $values[] = $role;
+
     $sql = "INSERT INTO area1_responses ($columns, submitted_at) VALUES ($placeholders, NOW())";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        $types = str_repeat('i', count($values)); // All questions are tinyint, so 'i' for integer
+        $types = str_repeat('i', count($questions)) . 'ss'; // 'i' for integer questions, 's' for program and role (strings)
         $stmt->bind_param($types, ...$values);
 
         if ($stmt->execute()) {
+            // Set session flag to prevent re-submission
+            $_SESSION[$session_key] = true;
             // Redirect to a thank you page or results page
-            header("Location: ../submission_success.php");
+            header("Location: ../submission_success.php?program=" . urlencode($program) . "&role=" . urlencode($role));
             exit();
         } else {
             echo "Error: " . $stmt->error;

@@ -1,3 +1,7 @@
+<?php
+    $program = isset($_GET['program']) ? htmlspecialchars($_GET['program']) : '';
+    $role = isset($_GET['role']) ? htmlspecialchars($_GET['role']) : '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +26,7 @@
         <h2>Thank You!</h2>
         <p>Your survey has been submitted successfully.</p>
         <div class="button-group">
-            <a href="index.php" class="home">Go to Survey List</a>
+            <a href="index.php?program=<?php echo urlencode($program); ?>&role=<?php echo urlencode($role); ?>" class="home">Go to Survey List</a>
         </div>
     </div>
 </body>

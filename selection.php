@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Clear all session variables when a new selection is made
+if (isset($_GET['program']) || isset($_GET['role'])) {
+    session_unset();
+    session_destroy();
+    session_start(); // Start a new session after destroying the old one
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,58 +95,24 @@
     <div class="container">
         <img src="DMSF_Logo.png" alt="DMSF Logo" style="display: block; margin: 0 auto 20px auto; max-width: 100%; height: auto; width: 100px;">
         <h2>PAASCU SELF-SURVEY INSTRUMENT</h2>
-<?php
-session_start();
-
-    $program = '';
-    $role = '';
-
-    if (isset($_GET['program']) && !empty($_GET['program'])) {
-        $program = htmlspecialchars($_GET['program']);
-    }
-
-    if (isset($_GET['role']) && !empty($_GET['role'])) {
-        $role = htmlspecialchars($_GET['role']);
-    }
-
-    // If program or role are empty, redirect to selection.php
-    if (empty($program) || empty($role)) {
-        header("Location: selection.php");
-        exit();
-    }
-
-    // Function to render survey link or disabled text
-    function renderSurveyLink($area, $program, $role) {
-        $session_flag_name = 'survey_submitted_area' . $area . '_' . md5($program . $role);
-        $survey_title = "AREA " . $area . ". ";
-        switch ($area) {
-            case 1: $survey_title .= "LEADERSHIP AND GOVERNANCE"; break;
-            case 2: $survey_title .= "QUALITY ASSURANCE"; break;
-            case 3: $survey_title .= "RESOURCE MANAGEMENT"; break;
-            case 4: $survey_title .= "TEACHING-LEARNING"; break;
-            case 5: $survey_title .= "STUDENT SERVICES"; break;
-            case 6: $survey_title .= "EXTERNAL RELATIONS"; break;
-            case 7: $survey_title .= "RESEARCH"; break;
-            case 8: $survey_title .= "RESULTS"; break;
-        }
-
-        if (isset($_SESSION[$session_flag_name]) && $_SESSION[$session_flag_name] === true) {
-            echo '<li style="margin-bottom: 16px; color: #6c757d; text-decoration: line-through;">' . $survey_title . ' (Completed)</li>';
-        } else {
-            echo '<li style="margin-bottom: 16px;"><a href="surveys/area' . $area . '_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" style="text-decoration: none; font-weight: 600; color: #186098;">' . $survey_title . '</a></li>';
-        }
-    }
-?>
-        <div style="margin: 24px 0; text-align: center;">
-            <h3>Program: <?php echo $program; ?></h3>
-            <h4>Role: <?php echo $role; ?></h4>
-            <p>Please select a survey to answer:</p>
-            <ul style="list-style: none; padding: 0;">
-                <?php for ($i = 1; $i <= 8; $i++) { renderSurveyLink($i, $program, $role); } ?>
-            </ul>
-            <a href="selection.php" style="display:inline-block;margin-top:20px;color:#124C7A;text-decoration:underline;font-size:0.97rem;">&laquo; Go back</a>
-            <a href="logout.php" style="display:inline-block;margin-top:20px;margin-left:20px;padding:10px 20px;background-color:#dc3545;color:#fff;text-decoration:none;border-radius:5px;">Logout</a>
-        </div>
+    <form method="get" action="index.php">
+        <label for="program">Program:</label>
+        <select name="program" id="program" required>
+            <option value="">-- Select Program --</option>
+            <option value="BS Nursing">BS Nursing</option>
+            <option value="BS Biology">BS Biology</option>
+            <option value="BS Midwifery">BS Midwifery</option>
+        </select>
+        <label for="role">Role:</label>
+        <select name="role" id="role" required>
+            <option value="">-- Select Role --</option>
+            <option value="Student">Student</option>
+            <option value="Full-time Faculty">Full-time Faculty</option>
+            <option value="Part-time Faculty">Part-time Faculty</option>
+            <option value="Student Support Office">Student Support Office</option>
+        </select>
+        <button type="submit">Proceed</button>
+    </form>
     </div>
 </body>
 </html>
