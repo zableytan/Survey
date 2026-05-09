@@ -29,24 +29,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $placeholders = implode(', ', array_fill(0, count($questions), '?'));
     $values = array_values($questions);
 
-    // Add program and role to columns, placeholders, and values
-    $columns .= ', program, role';
-    $placeholders .= ', ?, ?';
+    // Add program, role, and comments to columns, placeholders, and values
+    $columns .= ', program, role, comments';
+    $placeholders .= ', ?, ?, ?';
     $values[] = $program;
     $values[] = $role;
+    $values[] = $_POST['comments'];
 
     $sql = "INSERT INTO area2_responses ($columns, submitted_at) VALUES ($placeholders, NOW())";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        $types = str_repeat('i', count($questions)) . 'ss'; // 'i' for integer questions, 's' for program and role (strings)
+        $types = str_repeat('i', count($questions)) . 'sss'; // 'i' for integer questions, 's' for program, role, and comments (strings)
         $stmt->bind_param($types, ...$values);
 
         if ($stmt->execute()) {
             // Set session flag to prevent re-submission
             $_SESSION[$session_key] = true;
             // Redirect to a thank you page or results page
-            header("Location: ../submission_success.php?program=" . urlencode($program) . "&role=" . urlencode($role));
+            header("Location: ../submission_success.php?program=" . urlencode($program) . "&role=" . urlencode($role) . "&area=area2");
             exit();
         } else {
             echo "Error: " . $stmt->error;
@@ -81,216 +82,262 @@ function render_rating($name) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area 2: Quality Assurance Survey</title>
+    <title>Area 2 Survey - Quality Assurance</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f6f8fa;
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-border: #cbd5e1;
+            --input-focus: #3b82f6;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
         .container {
-            max-width: 700px;
-            margin: 32px auto;
-            background: #fff;
-            padding: 24px 32px;
-            border-radius: 14px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 48px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
             text-align: center;
-            margin-bottom: 18px;
-            font-weight: 600;
-            color: #2d3a4a;
+            margin-bottom: 32px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        h3 {
-            text-align: left;
-            margin: 32px 0 18px 0;
-            font-size: 1.15rem;
-            color: #3b4a5a;
-            font-weight: 500;
-        }
+
         .rating-guide {
-            background: #f0f4fa;
-            border-left: 4px solid #186098;
-            padding: 12px 18px;
-            margin-bottom: 28px;
-            font-size: 15px;
-            color: #3b4a5a;
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
         }
-        form {
-            margin: 0;
-        }
-        .section {
-            margin-bottom: 18px;
-        }
-        .question-card {
-            background: #f8fafc;
-            border-radius: 10px;
-            box-shadow: 0 1px 4px rgba(80,120,200,0.04);
-            padding: 18px 16px 12px 16px;
-            margin-bottom: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .question-card label {
-            font-weight: 400;
-            color: #2d3a4a;
+
+        .rating-guide strong {
+            display: block;
             font-size: 1rem;
-            margin-bottom: 0;
+            color: var(--primary-color);
+            margin-bottom: 12px;
         }
+
+        .rating-guide p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 48px 0 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .standard-box {
+            background: #eff6ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #dbeafe;
+        }
+
+        .standard-title {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+
+        .standard-desc {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1e40af;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: var(--transition);
+        }
+
+        .question-card:hover {
+            border-color: var(--input-focus);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-card label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
         .rating-bar {
             display: flex;
-            gap: 10px;
-            margin-top: 2px;
-            justify-content: center;
+            justify-content: space-between;
+            gap: 8px;
+            max-width: 400px;
+            margin: 0 auto;
         }
+
         .rating-bar input[type="radio"] {
             display: none;
         }
+
         .rating-bar label {
-            display: inline-block;
-            background: #e3eafc;
-            color: #3b4a5a;
-            padding: 8px 16px;
-            border-radius: 6px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 48px;
+            background: #fff;
+            border: 1.5px solid var(--input-border);
+            border-radius: 12px;
             cursor: pointer;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-            font-weight: 500;
-            border: 1.5px solid #c3d2f7;
-            min-width: 32px;
-            text-align: center;
-            box-shadow: 0 1px 2px rgba(80,120,200,0.04);
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            margin-bottom: 0;
         }
+
+        .rating-bar label:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #eff6ff;
+        }
+
         .rating-bar input[type="radio"]:checked + label {
-            background: #186098;
+            background: var(--primary-color);
             color: #fff;
-            border-color: #186098;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(80,120,200,0.10);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            transform: translateY(-2px);
         }
-        .rating-bar label:hover, .rating-bar label:focus {
-            background: #124C7A;
-            color: #fff;
+
+        .comments-section {
+            margin-top: 48px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--input-border);
+            background: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            min-height: 120px;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        textarea:focus {
             outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
+
         button {
-            background: linear-gradient(90deg, #186098 60%, #124C7A 100%);
+            width: 100%;
+            padding: 18px;
+            margin-top: 40px;
+            background: var(--primary-color);
             color: #fff;
             border: none;
-            padding: 14px 0;
-            border-radius: 8px;
+            border-radius: 16px;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            width: 100%;
-            margin: 32px 0 0 0;
-            box-shadow: 0 2px 8px rgba(80,120,200,0.08);
-            transition: background 0.2s;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
         }
+
         button:hover {
-            background: linear-gradient(90deg, #124C7A 60%, #186098 100%);
-        }
-        @media (max-width: 1024px) {
-            .container {
-                max-width: 90%;
-                margin: 20px auto;
-                padding: 20px;
-            }
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
             .container {
-                max-width: 95%;
-                margin: 15px auto;
-                padding: 15px;
-            }
-            h2 {
-                font-size: 1.8rem;
-            }
-            h3 {
-                font-size: 1.1rem;
-            }
-            .rating-guide, .standard-desc, .question-card label {
-                font-size: 0.95rem;
-            }
-            .rating-bar label {
-                padding: 6px 12px;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                max-width: 100%;
-                margin: 0;
-                padding: 10px;
+                padding: 32px 20px;
                 border-radius: 0;
-                box-shadow: none;
             }
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 15px;
-            }
-            h3 {
-                font-size: 1rem;
-                margin: 25px 0 15px 0;
-            }
-            .rating-guide, .standard-desc, .question-card label {
-                font-size: 0.9rem;
-            }
-            .question-card {
-                padding: 15px;
-            }
+            body { padding: 0; background: #fff; }
             .rating-bar {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 8px;
+                gap: 4px;
             }
             .rating-bar label {
-                padding: 5px 10px;
-                font-size: 0.85rem;
-                min-width: 28px;
+                height: 40px;
+                font-size: 0.9rem;
             }
-            button {
-                padding: 12px 0;
-                font-size: 1rem;
-                margin-top: 25px;
-            }
-        }
-        .standard-box {
-            background: #eaf3ff;
-            border-left: 4px solid #186098;
-            padding: 14px 18px 10px 18px;
-            margin-bottom: 18px;
-            border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(80,120,200,0.04);
-        }
-        .standard-title {
-            font-weight: 600;
-            color: #186098;
-            font-size: 1.05rem;
-            margin-bottom: 4px;
-        }
-        .standard-desc {
-            color: #3b4a5a;
-            font-size: 0.98rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>AREA 2. QUALITY ASSURANCE</h2>
+        
         <div class="rating-guide">
-            <strong>Rating Guide:</strong><br>
-            5 - Excellent : The practice is exemplary and serves as a model to others. The implementation of the criterion has led to excellent results.<br>
-            4 - Very Good : The criterion has been effectively implemented, and this has led to very good results.<br>
-            3 - Good : The criterion has been implemented adequately and has led to good results.<br>
-            2 - Needs Minor Improvement : The criterion has been implemented but needs minor improvement. In addition, the implementation has led to inconsistent or limited results.<br>
-            1 - Needs Major Improvement : The criterion has been inadequately implemented and needs significant improvement. The implementation has led to insignificant or unsatisfactory results.<br>
-            0 - Not Implemented : The criterion has not been implemented. Furthermore, no evidence is presented to show that initiatives have been carried out to implement it.
+            <strong>Rating Guide:</strong>
+            <p><strong>5 - Excellent</strong>: Exemplary practice, model to others, excellent results.</p>
+            <p><strong>4 - Very Good</strong>: Effective implementation, very good results.</p>
+            <p><strong>3 - Good</strong>: Adequate implementation, good results.</p>
+            <p><strong>2 - Needs Minor Improvement</strong>: Implemented but needs minor improvement; inconsistent results.</p>
+            <p><strong>1 - Needs Major Improvement</strong>: Inadequate implementation; unsatisfactory results.</p>
+            <p><strong>0 - Not Implemented</strong>: No implementation or evidence presented.</p>
         </div>
+
         <form method="post" action="">
             <div class="section">
                 <h3>Sub-area 2.1. Internal Quality Assurance System</h3>
@@ -355,7 +402,13 @@ function render_rating($name) {
                     <?php render_rating('q12'); ?>
                 </div>
             </div>
-            <button type="submit">Submit Survey</button>
+
+            <div class="comments-section">
+                <h3>Additional Comments</h3>
+                <textarea name="comments" id="comments" placeholder="Share any additional feedback or observations here..."></textarea>
+            </div>
+
+            <button type="submit">Submit Area 2 Survey</button>
         </form>
     </div>
 </body>

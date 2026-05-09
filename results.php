@@ -1,4 +1,16 @@
 <?php
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: login.php');
+    exit;
+}
+
 require_once __DIR__ . '/config/db.php';
 
 $areas = [
@@ -304,220 +316,577 @@ if ($res && $row = $res->fetch_assoc()) {
     }
     $overall_avg_rating = $count_avg_ratings > 0 ? round($total_avg_rating / $count_avg_ratings, 2) : '-';
 }
+
+// Query comments
+    $comments_data = [];
+    $comments_sql = "SELECT comments FROM {$area['table']}";
+    $comments_where_clauses = [];
+
+    if (!empty($where_clauses)) {
+        $comments_where_clauses = array_merge($comments_where_clauses, $where_clauses);
+    }
+
+    $comments_where_clauses[] = "comments IS NOT NULL";
+    $comments_where_clauses[] = "comments != ''";
+
+    if (!empty($comments_where_clauses)) {
+        $comments_sql .= " WHERE " . implode(" AND ", $comments_where_clauses);
+    }
+    $comments_sql .= " ORDER BY submitted_at DESC";
+
+    $comments_res = $conn->query($comments_sql);
+    if ($comments_res && $comments_res->num_rows > 0) {
+        while ($comment_row = $comments_res->fetch_assoc()) {
+            $comments_data[] = $comment_row['comments'];
+        }
+    }
+
+    // Debugging output
+  
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Survey Results</title>
+    <title>Survey Results - Admin Dashboard</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f6f8fa; margin: 0; }
-        .container { max-width: 900px; margin: 40px auto; background: #fff; padding: 32px 24px; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
-        h2 { text-align: center; color: #2d3a4a; margin-bottom: 18px; }
-        .area-select {
-            text-align: center;
-            margin-bottom: 30px;
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-border: #cbd5e1;
+            --input-focus: #3b82f6;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px 20px; /* Increased horizontal gap */
+            justify-content: space-between;
             align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
-        .area-select > div {
-            display: flex;
-            align-items: center;
-            gap: 5px; /* Space between label and select */
+
+        .header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.025em;
         }
-        .area-select label {
-            white-space: nowrap;
-            font-weight: 500;
-            color: #3b4a5a;
-        }
-        .area-select select {
-            flex-grow: 1;
-            min-width: 180px;
-            max-width: 250px;
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: 1.5px solid #c3d2f7;
-            font-size: 1rem;
-            background-color: #f8fafc;
-            color: #3b4a5a;
-        }
-        .area-select select:focus {
-            outline: none;
-            border-color: #186098;
-            box-shadow: 0 0 0 2px rgba(24, 96, 152, 0.2);
-        }
-        /* Responsive adjustments for smaller screens */
-        @media (max-width: 768px) {
-            .area-select {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .area-select > div {
-                width: 100%;
-                justify-content: center;
-            }
-            .area-select select {
-                max-width: 100%;
-            }
-        }
-        select { padding: 8px 16px; border-radius: 6px; border: 1.5px solid #c3d2f7; font-size: 1rem; }
-        table { width: 100%; border-collapse: collapse; margin-top: 18px; background: #f8fafc; }
-        th, td { padding: 12px 10px; text-align: left; }
-        th { background: #eaf3ff; color: #2d6be6; font-weight: 600; }
-        tr:nth-child(even) { background: #f0f4fa; }
-        tr:nth-child(odd) { background: #f8fafc; }
-        .summary { margin: 18px 0 0 0; color: #3b4a5a; font-size: 1.05rem; }
-        .subarea-header td {
-            background: #e0eaff !important;
-            color: #2d6be6 !important;
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 1.05rem;
-            border-top: 2px solid #b3cfff;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            font-size: 0.9rem;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 1024px) {
-            .container {
-                max-width: 95%;
-                margin: 20px auto;
-                padding: 20px;
-            }
-            h2 { font-size: 1.8rem; }
-            select { font-size: 0.95rem; padding: 6px 12px; }
-            th, td { font-size: 0.9rem; padding: 10px 8px; }
-            .subarea-header td { font-size: 1rem; }
-            .summary { font-size: 1rem; }
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
         }
 
-        @media (max-width: 768px) {
-            .container {
-                max-width: 100%;
-                margin: 0 auto;
-                padding: 15px;
-                border-radius: 0;
-            }
-            h2 { font-size: 1.5rem; }
-            select { width: 100%; margin-top: 10px; }
-            th, td { font-size: 0.85rem; padding: 8px 6px; }
-            .subarea-header td { font-size: 0.95rem; }
-            .summary { font-size: 0.95rem; }
+        .filter-section {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
         }
 
-        @media (max-width: 480px) {
-            h2 { font-size: 1.3rem; }
-            th, td { font-size: 0.8rem; padding: 6px 4px; }
-            .subarea-header td { font-size: 0.9rem; }
-            .summary { font-size: 0.9rem; }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-group select {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--input-border);
+            background: white;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .results-table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .subarea-header td {
+            background: #eff6ff;
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 12px 20px;
+        }
+
+        .subarea-summary td {
+            background: #f8fafc;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .rating-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            background: #eff6ff;
+            color: var(--primary-color);
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 40px 20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: white;
+            margin: auto;
+            max-width: 800px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            box-shadow: var(--shadow);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1;
+            transition: var(--transition);
+        }
+
+        .close-button:hover {
+            color: var(--text-main);
+        }
+
+        .comment-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 1.5px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .comment-item:hover {
+            border-color: var(--input-focus);
+            background: white;
+        }
+
+        .comment-text {
+            color: var(--text-main);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 24px 20px; border-radius: 0; }
+            .header { flex-direction: column; gap: 20px; text-align: center; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Survey Results</h2>
-        <div class="area-select">
-            <form method="get" action="">
-                <div>
-                    <label for="area">Select Survey Area: </label>
+        <header class="header">
+            <h2>Survey Results</h2>
+            <form action="logout.php" method="post">
+                <button type="submit" class="logout-btn">Logout Dashboard</button>
+            </form>
+        </header>
+
+        <section class="filter-section">
+            <form method="get" action="" class="filter-grid">
+                <div class="filter-group">
+                    <label for="area">Survey Area</label>
                     <select name="area" id="area" onchange="this.form.submit()">
                         <?php foreach ($areas as $key => $a): ?>
                             <option value="<?= htmlspecialchars($key) ?>" <?= $key === $selected_area ? 'selected' : '' ?>><?= htmlspecialchars($a['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div>
-                    <label for="program">Filter by Program: </label>
+                <div class="filter-group">
+                    <label for="program">Program Filter</label>
                     <select name="program" id="program" onchange="this.form.submit()">
                         <option value="">All Programs</option>
                         <?php
                             $program_query = $conn->query("SELECT DISTINCT program FROM {$area['table']}");
-                            while ($p_row = $program_query->fetch_assoc()) {
-                                $selected = (isset($_GET['program']) && $_GET['program'] == $p_row['program']) ? 'selected' : '';
-                                echo '<option value="' . htmlspecialchars($p_row['program']) . '" ' . $selected . '>' . htmlspecialchars($p_row['program']) . '</option>';
+                            if ($program_query) {
+                                while ($p_row = $program_query->fetch_assoc()) {
+                                    $selected = (isset($_GET['program']) && $_GET['program'] == $p_row['program']) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($p_row['program']) . '" ' . $selected . '>' . htmlspecialchars($p_row['program']) . '</option>';
+                                }
                             }
                         ?>
                     </select>
                 </div>
-                <div>
-                    <label for="role">Filter by Role: </label>
+                <div class="filter-group">
+                    <label for="role">Role Filter</label>
                     <select name="role" id="role" onchange="this.form.submit()">
                         <option value="">All Roles</option>
                         <?php
                             $role_query = $conn->query("SELECT DISTINCT role FROM {$area['table']}");
-                            while ($r_row = $role_query->fetch_assoc()) {
-                                $selected = (isset($_GET['role']) && $_GET['role'] == $r_row['role']) ? 'selected' : '';
-                                echo '<option value="' . htmlspecialchars($r_row['role']) . '" ' . $selected . '>' . htmlspecialchars($r_row['role']) . '</option>';
+                            if ($role_query) {
+                                while ($r_row = $role_query->fetch_assoc()) {
+                                    $selected = (isset($_GET['role']) && $_GET['role'] == $r_row['role']) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($r_row['role']) . '" ' . $selected . '>' . htmlspecialchars($r_row['role']) . '</option>';
+                                }
                             }
                         ?>
                     </select>
                 </div>
             </form>
-        </div>
-        <div class="summary">
-            Total Responses: <strong><?= $total_responses ?></strong><br>
-            Overall Average Rating: <strong><?= $overall_avg_rating ?></strong>
-        </div>
-        <table>
-            <tr>
-                <th>Question</th>
-                <th>Average Rating</th>
-            </tr>
-            <?php if (!empty($sub_areas)): ?>
-                <?php foreach ($sub_areas as $sub_idx => $sub): ?>
-                        <?php
-                            $sub_area_total_rating = 0;
-                            $sub_area_question_count = 0;
-                        ?>
-                    <tr class="subarea-header">
-                        <td colspan="2" style="background:#e0eaff; color:#2d6be6; font-weight:600; font-size:1.05rem; border-top:2px solid #b3cfff;">
-                            <?= htmlspecialchars($sub['title']) ?>
-                        </td>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value"><?= $total_responses ?></div>
+                <div class="stat-label">Total Responses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"><?= $overall_avg_rating ?></div>
+                <div class="stat-label">Overall Average</div>
+            </div>
+        </section>
+
+        <div class="results-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Question Description</th>
+                        <th style="width: 140px; text-align: center;">Avg Rating</th>
                     </tr>
-                    <?php foreach ($sub['questions'] as $j => $i): ?>
+                </thead>
+                <tbody>
+                    <?php if (!empty($sub_areas)): ?>
+                        <?php foreach ($sub_areas as $sub_idx => $sub): ?>
+                                <?php
+                                    $sub_area_total_rating = 0;
+                                    $sub_area_question_count = 0;
+                                ?>
+                            <tr class="subarea-header">
+                                <td colspan="2">
+                                    <?= htmlspecialchars($sub['title']) ?>
+                                </td>
+                            </tr>
+                            <?php foreach ($sub['questions'] as $j => $i): ?>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 500;"><?= ($j + 1) ?>. <?= htmlspecialchars($area['questions'][$i-1]) ?></div>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <?php
+                                            $avg_rating = isset($summary[$i]['avg']) && $summary[$i]['avg'] !== null ? $summary[$i]['avg'] : '-';
+                                            if ($avg_rating !== '-') {
+                                                $sub_area_total_rating += $avg_rating;
+                                                $sub_area_question_count++;
+                                            }
+                                        ?>
+                                        <span class="rating-badge"><?= $avg_rating ?></span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            <tr class="subarea-summary">
+                                <td style="text-align: right; padding-right: 32px; font-weight: 700;">Sub-area Average</td>
+                                <td style="text-align: center;">
+                                    <span class="rating-badge" style="background: var(--primary-color); color: white;">
+                                        <?= $sub_area_question_count > 0 ? round($sub_area_total_rating / $sub_area_question_count, 2) : '-' ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($area['questions'] as $i => $q): ?>
                         <tr>
-                            <td>
-                                <?php
-                                    // Display question number as 1-based within sub-area only
-                                    echo ($j + 1) . '. ' . htmlspecialchars($area['questions'][$i-1]);
-                                ?>
-                            </td>
-                            <td>
-                                <?php
-                                    $avg_rating = isset($summary[$i]['avg']) && $summary[$i]['avg'] !== null ? $summary[$i]['avg'] : '-';
-                                    if ($avg_rating !== '-') {
-                                        $sub_area_total_rating += $avg_rating;
-                                        $sub_area_question_count++;
-                                    }
-                                    echo $avg_rating;
-                                ?>
+                            <td><?= htmlspecialchars($q) ?></td>
+                            <td style="text-align: center;">
+                                <span class="rating-badge"><?= isset($summary[$i+1]['avg']) && $summary[$i+1]['avg'] !== null ? $summary[$i+1]['avg'] : '-' ?></span>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
-                    <tr class="subarea-summary">
-                        <td style="text-align: right; font-weight: bold;">Sub-area Average:</td>
-                        <td>
-                            <?php
-                                if ($sub_area_question_count > 0) {
-                                    echo round($sub_area_total_rating / $sub_area_question_count, 2);
-                                } else {
-                                    echo '-';
-                                }
-                            ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <?php foreach ($area['questions'] as $i => $q): ?>
-                <tr>
-                    <td><?= htmlspecialchars($q) ?></td>
-                    <td><?= isset($summary[$i+1]['avg']) && $summary[$i+1]['avg'] !== null ? $summary[$i+1]['avg'] : '-' ?></td>
-                </tr>
-                <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="actions-bar">
+            <a href="index.php" class="btn btn-secondary">
+                <span>← Back to List</span>
+            </a>
+            <button id="exportExcelBtn" class="btn btn-success">
+                <span>Export to Excel</span>
+            </button>
+            <?php if (!empty($comments_data)): ?>
+                <button id="openCommentsModal" class="btn btn-primary">
+                    <span>View Comments (<?= count($comments_data) ?>)</span>
+                </button>
             <?php endif; ?>
-        </table>
+        </footer>
     </div>
+
+    <!-- Comments Modal -->
+    <?php if (!empty($comments_data)): ?>
+    <div id="commentsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border-color);">
+                User Comments - <?= htmlspecialchars($area['name']) ?>
+            </h3>
+            <div class="comments-list">
+                <?php foreach ($comments_data as $comment): ?>
+                    <div class="comment-item">
+                        <p class="comment-text"><?= nl2br(htmlspecialchars($comment)) ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <script>
+        // Modal Logic
+        const modal = document.getElementById("commentsModal");
+        const btn = document.getElementById("openCommentsModal");
+        const span = document.querySelector(".close-button");
+
+        if (btn) {
+            btn.onclick = () => modal.style.display = "flex";
+        }
+
+        if (span) {
+            span.onclick = () => modal.style.display = "none";
+        }
+
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Excel Export
+        document.getElementById('exportExcelBtn').addEventListener('click', function() {
+            // Include current filters in export
+            const urlParams = new URLSearchParams(window.location.search);
+            window.location.href = 'export_excel.php?' + urlParams.toString();
+        });
+    </script>
 </body>
 </html>

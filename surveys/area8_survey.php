@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $types = str_repeat('i', count($questions)) . 'ss'; // 'i' for integer questions, 's' for program and role (strings)
         $stmt->bind_param($types, ...$values);
         if ($stmt->execute()) {
-            header("Location: ../submission_success.php?program=" . urlencode($program) . "&role=" . urlencode($role));
+            header("Location: ../submission_success.php?program=" . urlencode($program) . "&role=" . urlencode($role) . "&area=area8");
             exit();
         } else {
             echo "Error: " . $stmt->error;
@@ -72,129 +72,322 @@ function render_rating($name) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area 8: Results Survey</title>
+    <title>Area 8 Survey - Results</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f6f8fa; margin: 0; padding: 0; }
-        .container { max-width: 700px; margin: 32px auto; background: #fff; padding: 24px 32px; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
-        h2 { text-align: center; margin-bottom: 18px; font-weight: 600; color: #2d3a4a; }
-        h3 { text-align: left; margin: 32px 0 18px 0; font-size: 1.15rem; color: #3b4a5a; font-weight: 500; }
-        .rating-guide { background: #f0f4fa; border-left: 4px solid #186098; padding: 12px 18px; margin-bottom: 28px; font-size: 15px; color: #3b4a5a; }
-        form { margin: 0; }
-        .section { margin-bottom: 18px; }
-        .question-card { background: #f8fafc; border-radius: 10px; box-shadow: 0 1px 4px rgba(80,120,200,0.04); padding: 18px 16px 12px 16px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
-        .question-card label { font-weight: 400; color: #2d3a4a; font-size: 1rem; margin-bottom: 0; }
-        .rating-bar { display: flex; gap: 10px; margin-top: 2px; justify-content: center; }
-        .rating-bar input[type="radio"] { display: none; }
-        .rating-bar label { display: inline-block; background: #e3eafc; color: #3b4a5a; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: background 0.2s, color 0.2s, box-shadow 0.2s; font-weight: 500; border: 1.5px solid #c3d2f7; min-width: 32px; text-align: center; box-shadow: 0 1px 2px rgba(80,120,200,0.04); }
-        .rating-bar input[type="radio"]:checked + label { background: #186098; color: #fff; border-color: #186098; font-weight: 600; box-shadow: 0 2px 8px rgba(80,120,200,0.10); }
-        .rating-bar label:hover, .rating-bar label:focus { background: #124C7A; color: #fff; outline: none; }
-        button { background: linear-gradient(90deg, #186098 60%, #124C7A 100%); color: #fff; border: none; padding: 14px 0; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; width: 100%; margin: 32px 0 0 0; box-shadow: 0 2px 8px rgba(80,120,200,0.08); transition: background 0.2s; }
-        button:hover { background: linear-gradient(90deg, #124C7A 60%, #186098 100%); }
-        @media (max-width: 1024px) {
-            .container { max-width: 95%; margin: 20px auto; padding: 20px; }
-            h2 { font-size: 1.8rem; }
-            h3 { font-size: 1.1rem; }
-            .rating-guide { font-size: 14px; padding: 10px 15px; }
-            .question-card label { font-size: 0.95rem; }
-            .rating-bar label { padding: 7px 14px; font-size: 14px; }
-            button { padding: 12px 0; font-size: 1rem; }
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-border: #cbd5e1;
+            --input-focus: #3b82f6;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        @media (max-width: 768px) {
-            .container { max-width: 98%; margin: 15px auto; padding: 15px; }
-            h2 { font-size: 1.6rem; }
-            h3 { font-size: 1rem; }
-            .rating-guide { font-size: 13px; padding: 8px 12px; }
-            .question-card { padding: 15px; }
-            .question-card label { font-size: 0.9rem; }
-            .rating-bar { flex-wrap: wrap; justify-content: center; }
-            .rating-bar label { padding: 6px 12px; font-size: 13px; min-width: 30px; }
-            button { padding: 10px 0; font-size: 0.95rem; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        @media (max-width: 480px) {
-            .container { padding: 10px; border-radius: 0; margin: 0; max-width: 100%; }
-            h2 { font-size: 1.4rem; margin-bottom: 15px; }
-            h3 { font-size: 0.95rem; margin: 25px 0 15px 0; }
-            .rating-guide { font-size: 12px; padding: 8px; margin-bottom: 20px; }
-            .question-card { padding: 10px; margin-bottom: 15px; }
-            .question-card label { font-size: 0.85rem; }
-            .rating-bar { gap: 5px; }
-            .rating-bar label { padding: 5px 8px; font-size: 12px; min-width: 25px; border-radius: 5px; }
-            button { padding: 8px 0; font-size: 0.9rem; margin-top: 25px; border-radius: 6px; }
-            .standard-box { padding: 10px 12px; }
-            .standard-title { font-size: 1rem; }
-            .standard-desc { font-size: 0.9rem; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--text-main);
+            line-height: 1.6;
         }
-        .standard-box { background: #eaf3ff; border-left: 4px solid #186098; padding: 14px 18px 10px 18px; margin-bottom: 18px; border-radius: 8px; box-shadow: 0 1px 4px rgba(80,120,200,0.04); }
-        .standard-title { font-weight: 600; color: #186098; font-size: 1.05rem; margin-bottom: 4px; }
-        .standard-desc { color: #3b4a5a; font-size: 0.98rem; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 48px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 32px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .rating-guide {
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+        }
+
+        .rating-guide strong {
+            display: block;
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .rating-guide p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 48px 0 24px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .standard-box {
+            background: #eff6ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #dbeafe;
+        }
+
+        .standard-title {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+
+        .standard-desc {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1e40af;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: var(--transition);
+        }
+
+        .question-card:hover {
+            border-color: var(--input-focus);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-card label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .rating-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .rating-bar input[type="radio"] {
+            display: none;
+        }
+
+        .rating-bar label {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 48px;
+            background: #fff;
+            border: 1.5px solid var(--input-border);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            margin-bottom: 0;
+        }
+
+        .rating-bar label:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .rating-bar input[type="radio"]:checked + label {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .comments-section {
+            margin-top: 48px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--input-border);
+            background: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            min-height: 120px;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            margin-top: 40px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 20px;
+                border-radius: 0;
+            }
+            body { padding: 0; background: #fff; }
+            .rating-bar {
+                gap: 4px;
+            }
+            .rating-bar label {
+                height: 40px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>AREA 8. RESULTS</h2>
-    <div class="rating-guide">
-        <strong>Rating Guide:</strong><br>
-        5 - Excellent : The practice is exemplary and serves as a model to others. The implementation of the criterion has led to excellent results.<br>
-        4 - Very Good : The criterion has been effectively implemented, and this has led to very good results.<br>
-        3 - Good : The criterion has been implemented adequately and has led to good results.<br>
-        2 - Needs Minor Improvement : The criterion has been implemented but needs minor improvement. In addition, the implementation has led to inconsistent or limited results<br>
-        1 - Needs Major Improvement : The criterion has been inadequately implemented and needs significant improvement. The implementation has led to insignificant or unsatisfactory results.<br>
-        0 - Not Implemented : The criterion has not been implemented. Furthermore, no evidence is presented to show that initiatives have been carried out to implement it.
+    <div class="container">
+        <h2>AREA 8. RESULTS</h2>
+        
+        <div class="rating-guide">
+            <strong>Rating Guide:</strong>
+            <p><strong>5 - Excellent</strong>: Exemplary practice, model to others, excellent results.</p>
+            <p><strong>4 - Very Good</strong>: Effective implementation, very good results.</p>
+            <p><strong>3 - Good</strong>: Adequate implementation, good results.</p>
+            <p><strong>2 - Needs Minor Improvement</strong>: Implemented but needs minor improvement; inconsistent results.</p>
+            <p><strong>1 - Needs Major Improvement</strong>: Inadequate implementation; unsatisfactory results.</p>
+            <p><strong>0 - Not Implemented</strong>: No implementation or evidence presented.</p>
+        </div>
+
+        <form method="post" action="">
+            <div class="section">
+                <h3>Sub-area 8.1 Educational Results</h3>
+                <div class="standard-box">
+                    <div class="standard-title">STANDARD 20.</div>
+                    <div class="standard-desc">The educational process results include the achievement of the expected learning outcomes, pass rates, dropout rates, the average time to graduate, employability of graduates, pass rates of graduates in board examinations of board-related program offerings, and the satisfaction levels of graduates, among others.</div>
+                </div>
+                <div class="question-card"><label>1. The medical program's expected institutional and course learning outcomes are defined, monitored, and assessed for improvement.</label> <?php render_rating('q1'); ?></div>
+                <div class="question-card"><label>2. All courses of the medical program's pass and dropout rates are identified, monitored, and assessed for improvement.</label> <?php render_rating('q2'); ?></div>
+                <div class="question-card"><label>3. The average time to graduate for the program is identified, monitored, and assessed for improvement.</label> <?php render_rating('q3'); ?></div>
+                <div class="question-card"><label>4. A career progression program is established, monitored, and assessed for improvement.</label> <?php render_rating('q4'); ?></div>
+                <div class="question-card"><label>5. The performance rate within or above the national passing rate and the failure rates of graduates in the physician licensure examination (PLE) are identified, monitored, and assessed for improvement.</label> <?php render_rating('q5'); ?></div>
+                <div class="question-card"><label>6. The satisfaction levels of key stakeholders on the quality of graduates are established, monitored, and assessed for improvements.</label> <?php render_rating('q6'); ?></div>
+            </div>
+            <div class="section">
+                <h3>Sub-area 8.2. Community Engagement and Service Results</h3>
+                <div class="standard-box">
+                    <div class="standard-title">STANDARD 21.</div>
+                    <div class="standard-desc">The institution's community engagement and service programs produce results that impact the institution, its stakeholders, and society.</div>
+                </div>
+                <div class="question-card"><label>1. The nature and volume of community engagement and service activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q7'); ?></div>
+                <div class="question-card"><label>2. The societal impact and achievements of these activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q8'); ?></div>
+                <div class="question-card"><label>3. The impact on the medical school, faculty, staff, and students is identified, monitored, and assessed for improvement.</label> <?php render_rating('q9'); ?></div>
+                <div class="question-card"><label>4. The impact on these activities' beneficiaries and other stakeholders is identified, monitored, and assessed for improvement.</label> <?php render_rating('q10'); ?></div>
+            </div>
+            <div class="section">
+                <h3>Sub-area 8.3. Research Results</h3>
+                <div class="standard-box">
+                    <div class="standard-title">STANDARD 22.</div>
+                    <div class="standard-desc">The institution has produced research outputs through new knowledge embodied in publications, citations, journals, research-informed teaching, technology transfers, innovations, inventions, creative works, etc.</div>
+                </div>
+                <div class="question-card"><label>1. The nature and number of research outputs done by faculty members and staff are documented, monitored, and assessed for improvement.</label> <?php render_rating('q11'); ?></div>
+                <div class="question-card"><label>2. The nature and number of researches done by research teams and students are documented and assessed for improvement.</label> <?php render_rating('q12'); ?></div>
+                <div class="question-card"><label>3. The nature and number of research publications are documented, monitored, and assessed for improvement.</label> <?php render_rating('q13'); ?></div>
+                <div class="question-card"><label>4. The nature and number of intellectual properties are documented, monitored, and assessed for improvement.</label> <?php render_rating('q14'); ?></div>
+                <div class="question-card"><label>5. The impact of research outputs and their publications are identified, monitored, and assessed for improvement.</label> <?php render_rating('q15'); ?></div>
+                <div class="question-card"><label>6. The stakeholders' satisfaction in research activities is determined to guide further research development in the institution.</label> <?php render_rating('q16'); ?></div>
+            </div>
+            <div class="section">
+                <h3>Sub-area 8.4. Financial and Competitiveness Results</h3>
+                <div class="standard-box">
+                    <div class="standard-title">STANDARD 23.</div>
+                    <div class="standard-desc">The institution's financial performance and competitiveness are measured, monitored, and assessed for improvement and sustainability.</div>
+                </div>
+                <div class="question-card"><label>1. Asset acquisition and placement, retention, and disposal are monitored and assessed for improvement.</label> <?php render_rating('q17'); ?></div>
+                <div class="question-card"><label>2. Financing in terms of debt, equity, grants, or endowments is monitored and assessed for improvement.</label> <?php render_rating('q18'); ?></div>
+                <div class="question-card"><label>3. Education, research, and service activities measured in income and expenditure streams are monitored and assessed for improvement.</label> <?php render_rating('q19'); ?></div>
+                <div class="question-card"><label>4. Cash flows are established, monitored, and assessed for improvement.</label> <?php render_rating('q20'); ?></div>
+                <div class="question-card"><label>5. Reserves and savings are established, monitored, and assessed for improvement.</label> <?php render_rating('q21'); ?></div>
+                <div class="question-card"><label>6. Indicators of a reputation for quality program offerings, research, and extension activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q22'); ?></div>
+                <div class="question-card"><label>7. Best practices of the medical school are identified, monitored, and assessed for improvement.</label> <?php render_rating('q23'); ?></div>
+            </div>
+
+            <div class="comments-section">
+                <h3>Additional Comments</h3>
+                <textarea name="comments" id="comments" placeholder="Share any additional feedback or observations here..."></textarea>
+            </div>
+
+            <button type="submit">Submit Area 8 Survey</button>
+        </form>
     </div>
-    <form method="post" action="">
-        <div class="section">
-            <h3>Sub-area 8.1 Educational Results</h3>
-            <div class="standard-box">
-                <div class="standard-title">STANDARD 20.</div>
-                <div class="standard-desc">The educational process results include the achievement of the expected learning outcomes, pass rates, dropout rates, the average time to graduate, employability of graduates, pass rates of graduates in board examinations of board-related program offerings, and the satisfaction levels of graduates, among others.</div>
-            </div>
-            <div class="question-card"><label>1. The medical program's expected institutional and course learning outcomes are defined, monitored, and assessed for improvement.</label> <?php render_rating('q1'); ?></div>
-            <div class="question-card"><label>2. All courses of the medical program's pass and dropout rates are identified, monitored, and assessed for improvement.</label> <?php render_rating('q2'); ?></div>
-            <div class="question-card"><label>3. The average time to graduate for the program is identified, monitored, and assessed for improvement.</label> <?php render_rating('q3'); ?></div>
-            <div class="question-card"><label>4. A career progression program is established, monitored, and assessed for improvement.</label> <?php render_rating('q4'); ?></div>
-            <div class="question-card"><label>5. The performance rate within or above the national passing rate and the failure rates of graduates in the physician licensure examination (PLE) are identified, monitored, and assessed for improvement.</label> <?php render_rating('q5'); ?></div>
-            <div class="question-card"><label>6. The satisfaction levels of key stakeholders on the quality of graduates are established, monitored, and assessed for improvements.</label> <?php render_rating('q6'); ?></div>
-        </div>
-        <div class="section">
-            <h3>Sub-area 8.2. Community Engagement and Service Results</h3>
-            <div class="standard-box">
-                <div class="standard-title">STANDARD 21.</div>
-                <div class="standard-desc">The institution's community engagement and service programs produce results that impact the institution, its stakeholders, and society.</div>
-            </div>
-            <div class="question-card"><label>1. The nature and volume of community engagement and service activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q7'); ?></div>
-            <div class="question-card"><label>2. The societal impact and achievements of these activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q8'); ?></div>
-            <div class="question-card"><label>3. The impact on the medical school, faculty, staff, and students is identified, monitored, and assessed for improvement.</label> <?php render_rating('q9'); ?></div>
-            <div class="question-card"><label>4. The impact on these activities' beneficiaries and other stakeholders is identified, monitored, and assessed for improvement.</label> <?php render_rating('q10'); ?></div>
-        </div>
-        <div class="section">
-            <h3>Sub-area 8.3. Research Results</h3>
-            <div class="standard-box">
-                <div class="standard-title">STANDARD 22.</div>
-                <div class="standard-desc">The institution has produced research outputs through new knowledge embodied in publications, citations, journals, research-informed teaching, technology transfers, innovations, inventions, creative works, etc.</div>
-            </div>
-            <div class="question-card"><label>1. The nature and number of research outputs done by faculty members and staff are documented, monitored, and assessed for improvement.</label> <?php render_rating('q11'); ?></div>
-            <div class="question-card"><label>2. The nature and number of researches done by research teams and students are documented and assessed for improvement.</label> <?php render_rating('q12'); ?></div>
-            <div class="question-card"><label>3. The nature and number of research publications are documented, monitored, and assessed for improvement.</label> <?php render_rating('q13'); ?></div>
-            <div class="question-card"><label>4. The nature and number of intellectual properties are documented, monitored, and assessed for improvement.</label> <?php render_rating('q14'); ?></div>
-            <div class="question-card"><label>5. The impact of research outputs and their publications are identified, monitored, and assessed for improvement.</label> <?php render_rating('q15'); ?></div>
-            <div class="question-card"><label>6. The stakeholders' satisfaction in research activities is determined to guide further research development in the institution.</label> <?php render_rating('q16'); ?></div>
-        </div>
-        <div class="section">
-            <h3>Sub-area 8.4. Financial and Competitiveness Results</h3>
-            <div class="standard-box">
-                <div class="standard-title">STANDARD 23.</div>
-                <div class="standard-desc">The institution's financial performance and competitiveness are measured, monitored, and assessed for improvement and sustainability.</div>
-            </div>
-            <div class="question-card"><label>1. Asset acquisition and placement, retention, and disposal are monitored and assessed for improvement.</label> <?php render_rating('q17'); ?></div>
-            <div class="question-card"><label>2. Financing in terms of debt, equity, grants, or endowments is monitored and assessed for improvement.</label> <?php render_rating('q18'); ?></div>
-            <div class="question-card"><label>3. Education, research, and service activities measured in income and expenditure streams are monitored and assessed for improvement.</label> <?php render_rating('q19'); ?></div>
-            <div class="question-card"><label>4. Cash flows are established, monitored, and assessed for improvement.</label> <?php render_rating('q20'); ?></div>
-            <div class="question-card"><label>5. Reserves and savings are established, monitored, and assessed for improvement.</label> <?php render_rating('q21'); ?></div>
-            <div class="question-card"><label>6. Indicators of a reputation for quality program offerings, research, and extension activities are identified, monitored, and assessed for improvement.</label> <?php render_rating('q22'); ?></div>
-            <div class="question-card"><label>7. Best practices of the medical school are identified, monitored, and assessed for improvement.</label> <?php render_rating('q23'); ?></div>
-        </div>
-        <button type="submit">Submit Survey</button>
-    </form>
-</div>
 </body>
 </html>
