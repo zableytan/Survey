@@ -1,3 +1,59 @@
+<?php
+session_start();
+
+$program = '';
+$role = '';
+
+if (isset($_GET['program']) && !empty($_GET['program'])) {
+    $program = htmlspecialchars($_GET['program']);
+}
+
+if (isset($_GET['role']) && !empty($_GET['role'])) {
+    $role = htmlspecialchars($_GET['role']);
+}
+
+// If program or role are empty, redirect before any page output is sent.
+if (empty($program) || empty($role)) {
+    header("Location: selection.php");
+    exit();
+}
+
+// Function to render survey link or disabled text
+function renderSurveyLink($area, $program, $role) {
+    $session_flag_name = 'survey_submitted_area' . $area . '_' . md5($program . $role);
+    $survey_title = "";
+    switch ($area) {
+        case 1: $survey_title = "Leadership and Governance"; break;
+        case 2: $survey_title = "Quality Assurance"; break;
+        case 3: $survey_title = "Resource Management"; break;
+        case 4: $survey_title = "Teaching-Learning"; break;
+        case 5: $survey_title = "Student Services"; break;
+        case 6: $survey_title = "External Relations"; break;
+        case 7: $survey_title = "Research"; break;
+        case 8: $survey_title = "Results"; break;
+    }
+
+    $is_completed = (isset($_SESSION[$session_flag_name]) && $_SESSION[$session_flag_name] === true);
+
+    if ($is_completed) {
+        echo '
+        <div class="survey-item completed">
+            <span class="area-num">AREA ' . $area . '</span>
+            <span class="area-title">' . $survey_title . '</span>
+            <span class="status-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </span>
+        </div>';
+    } else {
+        echo '
+        <a href="surveys/area' . $area . '_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" class="survey-item">
+            <span class="area-num">AREA ' . $area . '</span>
+            <span class="area-title">' . $survey_title . '</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.3"><path d="M9 18l6-6-6-6"></path></svg>
+        </a>';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -217,63 +273,6 @@
 
 <body>
     <div class="container">
-        <?php
-        session_start();
-
-        $program = '';
-        $role = '';
-
-        if (isset($_GET['program']) && !empty($_GET['program'])) {
-            $program = htmlspecialchars($_GET['program']);
-        }
-
-        if (isset($_GET['role']) && !empty($_GET['role'])) {
-            $role = htmlspecialchars($_GET['role']);
-        }
-
-        // If program or role are empty, redirect to selection.php
-        if (empty($program) || empty($role)) {
-            header("Location: selection.php");
-            exit();
-        }
-
-        // Function to render survey link or disabled text
-        function renderSurveyLink($area, $program, $role) {
-            $session_flag_name = 'survey_submitted_area' . $area . '_' . md5($program . $role);
-            $survey_title = "";
-            switch ($area) {
-                case 1: $survey_title = "Leadership and Governance"; break;
-                case 2: $survey_title = "Quality Assurance"; break;
-                case 3: $survey_title = "Resource Management"; break;
-                case 4: $survey_title = "Teaching-Learning"; break;
-                case 5: $survey_title = "Student Services"; break;
-                case 6: $survey_title = "External Relations"; break;
-                case 7: $survey_title = "Research"; break;
-                case 8: $survey_title = "Results"; break;
-            }
-
-            $is_completed = (isset($_SESSION[$session_flag_name]) && $_SESSION[$session_flag_name] === true);
-            
-            if ($is_completed) {
-                echo '
-                <div class="survey-item completed">
-                    <span class="area-num">AREA ' . $area . '</span>
-                    <span class="area-title">' . $survey_title . '</span>
-                    <span class="status-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    </span>
-                </div>';
-            } else {
-                echo '
-                <a href="surveys/area' . $area . '_survey.php?program=' . urlencode($program) . '&role=' . urlencode($role) . '" class="survey-item">
-                    <span class="area-num">AREA ' . $area . '</span>
-                    <span class="area-title">' . $survey_title . '</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.3"><path d="M9 18l6-6-6-6"></path></svg>
-                </a>';
-            }
-        }
-        ?>
-
         <div class="header">
             <img src="DMSF_Logo.png" alt="DMSF Logo" class="logo">
             <h1>PAASCU Self-Survey</h1>
